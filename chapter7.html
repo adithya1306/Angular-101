@@ -1,0 +1,802 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Chapter 7 - RxJS 101</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2a7536a1-10ea-8091-a236-cac7f00bc01c" class="page sans"><header><h1 class="page-title">Chapter 7 - RxJS 101</h1><p class="page-description"></p></header><div class="page-body"><hr id="2a7536a1-10ea-8017-91b6-e9c45a104ed3"/><h3 id="2a7536a1-10ea-803a-ac29-df01a2cda932" class=""><strong>1. What is RxJS?</strong></h3><p id="2a7536a1-10ea-80d7-b4ab-c262a8eee96f" class=""><strong>RxJS (Reactive Extensions for JavaScript)</strong> is a library for <strong>reactive programming</strong> using <strong>observables</strong>.</p><p id="2a7536a1-10ea-8054-95c4-f6838d006a78" class="">It allows you to handle <strong>asynchronous data streams</strong> like API calls, user input, timers, or websockets — all in a consistent way.</p><blockquote id="2a7536a1-10ea-80a5-8a4f-c5a0307e6521" class="">Think of RxJS as a way to handle data that changes over time.</blockquote><hr id="2a7536a1-10ea-802c-9e90-eeb49cce1538"/><h3 id="2a7536a1-10ea-804e-bd22-e22dd1723413" class=""><strong>2. Core Concepts</strong></h3><table id="2a7536a1-10ea-808e-9380-fbe692d944c2" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-8098-8063-d515b3c5c73a"><th id="&lt;;PM" class="simple-table-header-color simple-table-header">Concept</th><th id="uyUO" class="simple-table-header-color simple-table-header">Description</th><th id="pxEB" class="simple-table-header-color simple-table-header">Example</th></tr></thead><tbody><tr id="2a7536a1-10ea-80d2-8f98-dcd51d460038"><td id="&lt;;PM" class=""><strong>Observable</strong></td><td id="uyUO" class="">Emits a stream of data over time</td><td id="pxEB" class=""><code>this.http.get()</code> returns Observable</td></tr><tr id="2a7536a1-10ea-80b7-a3b0-f970e6558478"><td id="&lt;;PM" class=""><strong>Observer</strong></td><td id="uyUO" class="">Consumes data emitted by Observable</td><td id="pxEB" class=""><code>.subscribe(next, error, complete)</code></td></tr><tr id="2a7536a1-10ea-8052-aab2-db184e7aa585"><td id="&lt;;PM" class=""><strong>Subscription</strong></td><td id="uyUO" class="">Represents execution of Observable</td><td id="pxEB" class=""><code>const sub = obs.subscribe()</code></td></tr><tr id="2a7536a1-10ea-80d4-8cf9-d616fefe7eee"><td id="&lt;;PM" class=""><strong>Operator</strong></td><td id="uyUO" class="">Functions that transform data streams</td><td id="pxEB" class=""><code>map()</code>, <code>filter()</code>, <code>catchError()</code></td></tr><tr id="2a7536a1-10ea-80b8-af1d-f43f5b47b157"><td id="&lt;;PM" class=""><strong>Subject</strong></td><td id="uyUO" class="">Both Observable and Observer</td><td id="pxEB" class="">Used for sharing data or emitting manually</td></tr></tbody></table><hr id="2a7536a1-10ea-80ed-98f1-f090c9c1249e"/><h3 id="2a7536a1-10ea-806a-a55a-cb6cc822ec48" class=""><strong>3. Observable Creation</strong></h3><h3 id="2a7536a1-10ea-801d-9b95-ca4be2bde5a1" class="">From Static Data:</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-808a-917b-e13878a5c866" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { of } from &#x27;rxjs&#x27;;
+
+const numbers$ = of(1, 2, 3);
+numbers$.subscribe(val =&gt; console.log(val));</code></pre><h3 id="2a7536a1-10ea-8097-88da-f15270e95d27" class="">From Events:</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a1-9d12-e65e1daa03fc" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { fromEvent } from &#x27;rxjs&#x27;;
+
+const clicks$ = fromEvent(document, &#x27;click&#x27;);
+clicks$.subscribe(() =&gt; console.log(&#x27;Clicked!&#x27;));</code></pre><h3 id="2a7536a1-10ea-80ce-ac23-d3c3a765a135" class="">From Promises:</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8066-870c-f523348e9166" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { from } from &#x27;rxjs&#x27;;
+
+const dataPromise = fetch(&#x27;/api/users&#x27;).then(res =&gt; res.json());
+const data$ = from(dataPromise);
+data$.subscribe(console.log);</code></pre><hr id="2a7536a1-10ea-8066-aa77-c8e111d09b2f"/><h3 id="2a7536a1-10ea-80e8-bc0f-dc2d6a4edffc" class=""><strong>4. Common RxJS Operators (Industry-Used)</strong></h3><p id="2a7536a1-10ea-80ef-ae78-dd741ee16c90" class="">Operators are <strong>functions</strong> that let you transform, filter, or combine Observables.</p><table id="2a7536a1-10ea-80fe-bcc3-d38c6bfb5b04" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-8094-88b0-ce124d91afa7"><th id="Tmdd" class="simple-table-header-color simple-table-header">Category</th><th id="\dUR" class="simple-table-header-color simple-table-header">Operators</th><th id="|C`:" class="simple-table-header-color simple-table-header">Description</th></tr></thead><tbody><tr id="2a7536a1-10ea-809b-adeb-cc735f8f1154"><td id="Tmdd" class=""><strong>Creation</strong></td><td id="\dUR" class=""><code>of</code>, <code>from</code>, <code>interval</code>, <code>fromEvent</code></td><td id="|C`:" class="">Create observables</td></tr><tr id="2a7536a1-10ea-801a-922c-e95dcd5fd10d"><td id="Tmdd" class=""><strong>Transformation</strong></td><td id="\dUR" class=""><code>map</code>, <code>switchMap</code>, <code>mergeMap</code>, <code>concatMap</code>, <code>exhaustMap</code></td><td id="|C`:" class="">Transform emitted values</td></tr><tr id="2a7536a1-10ea-802d-92d0-e31b9f47e551"><td id="Tmdd" class=""><strong>Filtering</strong></td><td id="\dUR" class=""><code>filter</code>, <code>debounceTime</code>, <code>take</code>, <code>takeUntil</code>, <code>distinctUntilChanged</code></td><td id="|C`:" class="">Control what passes through</td></tr><tr id="2a7536a1-10ea-8090-aa1e-fd514e3882a4"><td id="Tmdd" class=""><strong>Combination</strong></td><td id="\dUR" class=""><code>combineLatest</code>, <code>forkJoin</code>, <code>merge</code>, <code>concat</code></td><td id="|C`:" class="">Merge multiple streams</td></tr><tr id="2a7536a1-10ea-8017-a8f4-d59874525e16"><td id="Tmdd" class=""><strong>Error Handling</strong></td><td id="\dUR" class=""><code>catchError</code>, <code>retry</code>, <code>retryWhen</code></td><td id="|C`:" class="">Handle errors gracefully</td></tr><tr id="2a7536a1-10ea-80e9-bff8-f62f5c35aca5"><td id="Tmdd" class=""><strong>Utility</strong></td><td id="\dUR" class=""><code>tap</code>, <code>finalize</code>, <code>delay</code></td><td id="|C`:" class="">Side effects or cleanup</td></tr></tbody></table><hr id="2a7536a1-10ea-8043-be41-d27da583f2e5"/><h3 id="2a7536a1-10ea-80a5-b6ed-c02b19d56f6c" class=""><strong>5. Transformation Operators</strong></h3><h3 id="2a7536a1-10ea-8075-925b-e108875484b5" class=""><strong>map()</strong></h3><p id="2a7536a1-10ea-8085-9dfb-c8541a77c7ad" class="">Transforms each emitted value.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8048-aed8-d1cf85b8e7aa" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">of(1, 2, 3).pipe(map(x =&gt; x * 2)).subscribe(console.log);
+// Output: 2, 4, 6</code></pre><h3 id="2a7536a1-10ea-8024-9e27-cdb4d060b882" class=""><strong>switchMap()</strong></h3><p id="2a7536a1-10ea-802e-aa12-ddd4faff0c9e" class="">Cancels the previous observable when a new value arrives (common in HTTP calls &amp; search boxes).</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-804f-87bb-ffbf0280aa51" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">fromEvent(inputEl, &#x27;keyup&#x27;).pipe(
+  debounceTime(300),
+  switchMap((event: any) =&gt; this.http.get(`/api?q=${event.target.value}`))
+);</code></pre><h3 id="2a7536a1-10ea-8058-84fb-c5bb35e71bbe" class=""><strong>mergeMap()</strong></h3><p id="2a7536a1-10ea-8077-a615-eba1dd6d6aa2" class="">Runs multiple observables <strong>in parallel</strong>.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8066-b01a-d9bd62647966" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">from(users).pipe(
+  mergeMap(user =&gt; this.http.get(`/api/profile/${user.id}`))
+);</code></pre><h3 id="2a7536a1-10ea-80ff-bab2-df7d089fbf93" class=""><strong>concatMap()</strong></h3><p id="2a7536a1-10ea-80db-9d86-eb94321571ce" class="">Runs observables <strong>sequentially</strong> (one after another).</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8008-8572-f58ead4bcc5e" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">from(tasks).pipe(
+  concatMap(task =&gt; this.http.post(&#x27;/api/tasks&#x27;, task))
+);</code></pre><h3 id="2a7536a1-10ea-8084-8959-f2ac74814375" class=""><strong>exhaustMap()</strong></h3><p id="2a7536a1-10ea-8023-9d23-daafa3d485e9" class="">Ignores new values while a previous one is still running.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80dc-b4c8-e5883f6b151e" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">fromEvent(loginBtn, &#x27;click&#x27;).pipe(
+  exhaustMap(() =&gt; this.http.post(&#x27;/api/login&#x27;, credentials))
+);</code></pre><hr id="2a7536a1-10ea-80af-bb82-c793d34ff1e7"/><h3 id="2a7536a1-10ea-8009-89cb-fb851d5a5a58" class=""><strong>6. Filtering Operators</strong></h3><h3 id="2a7536a1-10ea-80bd-a780-c67132adf2eb" class=""><strong>filter()</strong></h3><p id="2a7536a1-10ea-808b-a755-d04276919526" class="">Filters emitted values.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8012-9bd6-ec4672709656" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">of(1, 2, 3, 4, 5).pipe(
+  filter(x =&gt; x % 2 === 0)
+).subscribe(console.log);
+// Output: 2, 4</code></pre><h3 id="2a7536a1-10ea-8057-9ddf-f949b74273fe" class=""><strong>debounceTime()</strong></h3><p id="2a7536a1-10ea-8042-bc77-e0fc77dff0bf" class="">Waits for a pause in emission — perfect for search boxes.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80c9-8390-fb089344a4c3" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">fromEvent(input, &#x27;keyup&#x27;).pipe(
+  debounceTime(300),
+  map((e: any) =&gt; e.target.value)
+);</code></pre><h3 id="2a7536a1-10ea-809e-a48a-f3db1de7249e" class=""><strong>takeUntil()</strong></h3><p id="2a7536a1-10ea-8043-aab6-cd3ed7c23541" class="">Stops emission when another observable emits — used for <strong>unsubscribing on destroy</strong>.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-805d-ac34-dfef869bf5d1" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.data$.pipe(takeUntil(this.destroy$)).subscribe();</code></pre><hr id="2a7536a1-10ea-8091-8264-c2045cc0b977"/><h3 id="2a7536a1-10ea-807b-938c-f609a40ad79e" class=""><strong>7. Subjects and BehaviorSubjects</strong></h3><p id="2a7536a1-10ea-8087-9536-efe7975f5d87" class="">Subjects act as both <strong>Observable and Observer</strong> — they can <strong>emit</strong> and <strong>subscribe</strong>.</p><h3 id="2a7536a1-10ea-80b7-97e3-fad8cababe8f" class=""><strong>a. Subject</strong></h3><p id="2a7536a1-10ea-80ad-90f6-e8272b7c8bc0" class="">Doesn’t hold any previous value.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8077-bac5-f75dd1192be5" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { Subject } from &#x27;rxjs&#x27;;
+
+const subject = new Subject&lt;number&gt;();
+
+subject.subscribe(val =&gt; console.log(&#x27;A:&#x27;, val));
+subject.next(1); // A: 1
+subject.next(2);
+
+subject.subscribe(val =&gt; console.log(&#x27;B:&#x27;, val));
+subject.next(3); // A: 3, B: 3</code></pre><h3 id="2a7536a1-10ea-80e8-8b35-f769908cf6d7" class=""><strong>b. BehaviorSubject</strong></h3><p id="2a7536a1-10ea-8009-bc7d-e217219a3f44" class="">Holds <strong>the latest value</strong> and emits it to new subscribers.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-808d-93b5-dfe45eb9097e" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { BehaviorSubject } from &#x27;rxjs&#x27;;
+
+const user$ = new BehaviorSubject&lt;string&gt;(&#x27;Guest&#x27;);
+
+user$.subscribe(console.log); // Guest
+user$.next(&#x27;Adithya&#x27;); // Guest -&gt; Adithya</code></pre><p id="2a7536a1-10ea-806c-a2ab-d53438fda02a" class="">✅ Commonly used for <strong>state management</strong> or <strong>sharing data between components</strong>.</p><h3 id="2a7536a1-10ea-8002-88d5-f6d02392b399" class=""><strong>c. ReplaySubject</strong></h3><p id="2a7536a1-10ea-8000-b6b3-d2f0bb7840ed" class="">Replays <strong>last N values</strong> to new subscribers.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-808f-8da7-dd8b2d9bb78f" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">const replay$ = new ReplaySubject(2);
+replay$.next(1);
+replay$.next(2);
+replay$.next(3);
+
+replay$.subscribe(console.log); // 2, 3</code></pre><hr id="2a7536a1-10ea-80cb-94f1-fd62852b7497"/><h3 id="2a7536a1-10ea-8095-b4c6-c511b9d28338" class=""><strong>8. Async Pipe (Best Practice)</strong></h3><p id="2a7536a1-10ea-8096-89cb-f15e87a4f7d6" class="">Instead of manually subscribing and unsubscribing, use the <code><strong>async</strong></code><strong> pipe</strong> in templates:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8044-b37a-e0bb4bf62ed0" class="code code-wrap"><code class="language-ASCII Art" style="white-space:pre-wrap;word-break:break-all">user$ = this.userService.getUser();</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80e1-be5f-f5ed908ed103" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;div *ngIf=&quot;user$ | async as user&quot;&gt;
+  {{ user.name }}
+&lt;/div&gt;
+</code></pre><p id="2a7536a1-10ea-8083-9d7c-d1ec02b5b109" class="">✅ Automatically subscribes/unsubscribes</p><p id="2a7536a1-10ea-8071-983b-d165c7401ea7" class="">✅ Keeps template clean</p><p id="2a7536a1-10ea-80db-be9b-ec25e5a59ca8" class="">✅ Prevents memory leaks</p><hr id="2a7536a1-10ea-807b-84d8-f8b24a3201b3"/><h3 id="2a7536a1-10ea-80ae-bad5-f52439eab535" class=""><strong>9. Combining Observables</strong></h3><h3 id="2a7536a1-10ea-80d9-b17b-c8c1689f5a8a" class=""><strong>combineLatest()</strong></h3><p id="2a7536a1-10ea-805e-ae00-cd3a3fc6bda1" class="">Waits for <strong>each observable to emit once</strong>, then emits combined results.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8032-bf54-d34087e65c53" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">combineLatest([this.user$, this.settings$]).subscribe(([user, settings]) =&gt; {
+  console.log(user.name, settings.theme);
+});</code></pre><h3 id="2a7536a1-10ea-80d8-8761-e3a6681a2d57" class=""><strong>forkJoin()</strong></h3><p id="2a7536a1-10ea-80d1-b085-f68b62142b87" class="">Runs multiple observables in parallel and emits once all complete.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8011-8a1d-cf6df6981eda" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { forkJoin } from &#x27;rxjs&#x27;;
+
+forkJoin({
+  user: this.http.get(&#x27;/api/user&#x27;),
+  orders: this.http.get(&#x27;/api/orders&#x27;)
+}).subscribe({
+  next: (data) =&gt; {
+    console.log(data.user);   // Response from /api/user
+    console.log(data.orders); // Response from /api/orders
+  },
+  error: (err) =&gt; console.error(&#x27;Error:&#x27;, err),
+  complete: () =&gt; console.log(&#x27;All requests completed!&#x27;)
+});
+
+O/P
+
+{
+  &quot;user&quot;: { &quot;id&quot;: 1, &quot;name&quot;: &quot;Adithya&quot; },
+  &quot;orders&quot;: [{ &quot;id&quot;: 101, &quot;item&quot;: &quot;Laptop&quot; }]
+}
+</code></pre><hr id="2a7536a1-10ea-8043-9b95-e35739acd3b1"/><h3 id="2a7536a1-10ea-80e6-998a-dd939fba8e82" class=""><strong>10. Error Handling with RxJS</strong></h3><p id="2a7536a1-10ea-8059-99fa-cc199f51f632" class="">Use <code>catchError</code>, <code>retry</code>, and <code>retryWhen</code>.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8071-9fd5-d7f4d19d7c0f" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.http.get(&#x27;/api/users&#x27;).pipe(
+  retry(2),
+  catchError(error =&gt; {
+    console.error(&#x27;API failed:&#x27;, error);
+    return throwError(() =&gt; new Error(&#x27;Server error&#x27;));
+  })
+);</code></pre><hr id="2a7536a1-10ea-809b-818f-e38fc147bf1a"/><h3 id="2a7536a1-10ea-802c-bf0d-f3f73ee32024" class=""><strong>11. Common Async Patterns in Angular</strong></h3><h3 id="2a7536a1-10ea-8004-bc6c-e419658dadc8" class=""><strong>Chaining API Calls</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80f0-a9ac-d5a9071a9959" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.http.get(&#x27;/api/user&#x27;).pipe(
+  switchMap((user: any) =&gt; this.http.get(`/api/orders/${user.id}`))
+);</code></pre><h3 id="2a7536a1-10ea-8071-914c-eedc3e033a33" class=""><strong>Handling Loading States</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8084-ac99-e1b50322c895" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">isLoading = new BehaviorSubject&lt;boolean&gt;(false);
+
+loadUsers() {
+  this.isLoading.next(true);
+  this.http.get(&#x27;/api/users&#x27;).pipe(
+    finalize(() =&gt; this.isLoading.next(false))
+  ).subscribe();
+}</code></pre><h3 id="2a7536a1-10ea-8035-903b-cac99b334fcf" class=""><strong>State Management with BehaviorSubject</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80bd-8175-cf7b5e43a391" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">private userSource = new BehaviorSubject&lt;User | null&gt;(null);
+user$ = this.userSource.asObservable();
+
+setUser(user: User) {
+  this.userSource.next(user);
+}</code></pre><hr id="2a7536a1-10ea-80e0-8c41-ee41ceaf6ca3"/><h3 id="2a7536a1-10ea-8094-8803-fc83bae79ece" class=""><strong>12. Key Industry Tips</strong></h3><p id="2a7536a1-10ea-80c7-afa1-e4ccf7cc6b4d" class="">✅ Always unsubscribe — use <code>takeUntil</code> or <code>async</code> pipe.</p><p id="2a7536a1-10ea-80cd-94a0-dd39543c76ed" class="">✅ Use <code>switchMap</code> for dependent HTTP calls.</p><p id="2a7536a1-10ea-808f-b644-d429627ce982" class="">✅ Prefer <code>BehaviorSubject</code> for shared state.</p><p id="2a7536a1-10ea-8040-9896-eee35192f622" class="">✅ Avoid manual <code>subscribe()</code> inside services — return Observables instead.</p><p id="2a7536a1-10ea-8003-9c7b-da6b2f327d58" class="">✅ Use operators like <code>tap()</code> for debugging.</p><p id="2a7536a1-10ea-80f4-884e-fc7aeb29125b" class="">✅ Think in terms of <strong>data streams</strong>, not static variables.</p><hr id="2a7536a1-10ea-8043-9c9b-f8cadc7af8a7"/><h3 id="2a7536a1-10ea-80de-a8cd-ecb689dffe9c" class=""><strong>13. Mini Project Example</strong></h3><p id="2a7536a1-10ea-80c9-b562-d76fd9304f73" class=""><strong>Search-as-you-type API Example:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8011-a861-d6966b971a1c" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">fromEvent(this.searchInput.nativeElement, &#x27;keyup&#x27;).pipe(
+  debounceTime(400),
+  map((e: any) =&gt; e.target.value),
+  distinctUntilChanged(),
+  switchMap(query =&gt; this.http.get(`/api/search?q=${query}`))
+).subscribe(results =&gt; this.results = results);</code></pre><hr id="2a7536a1-10ea-80a9-a972-dd12a349a828"/><p id="2a7536a1-10ea-803c-810e-f87f57520ebe" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

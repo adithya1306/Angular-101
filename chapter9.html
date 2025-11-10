@@ -1,0 +1,824 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Chapter 9 - Forms 101</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2a7536a1-10ea-80f2-bb72-e56c35dad0ea" class="page sans"><header><h1 class="page-title">Chapter 9 - Forms 101</h1><p class="page-description"></p></header><div class="page-body"><h3 id="2a7536a1-10ea-801c-9e9b-cab95599feaa" class="">🔹 9.1 Introduction</h3><p id="2a7536a1-10ea-8062-87fe-fc0b65bed497" class="">Forms are core to any application that involves <strong>user input</strong>, like login pages, registration, feedback, or data entry.</p><p id="2a7536a1-10ea-804b-a20b-eb8e5f66d832" class="">Angular provides <strong>two different approaches</strong> for building forms:</p><table id="2a7536a1-10ea-80b3-9d6e-eacab888bdac" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-8011-883d-eb931eea4920"><th id="\XMz" class="simple-table-header-color simple-table-header">Approach</th><th id="m&gt;jA" class="simple-table-header-color simple-table-header">Best for</th><th id="HiyI" class="simple-table-header-color simple-table-header">Key Feature</th></tr></thead><tbody><tr id="2a7536a1-10ea-80c6-b042-d6c27aad44d2"><td id="\XMz" class=""><strong>Template-driven forms</strong></td><td id="m&gt;jA" class="">Simple forms</td><td id="HiyI" class="">Defined mostly in HTML, uses <code>ngModel</code></td></tr><tr id="2a7536a1-10ea-80e4-8d68-fc7a6f8263b0"><td id="\XMz" class=""><strong>Reactive forms</strong></td><td id="m&gt;jA" class="">Complex / dynamic forms</td><td id="HiyI" class="">Defined in TypeScript using <code>FormGroup</code>, <code>FormControl</code></td></tr></tbody></table><hr id="2a7536a1-10ea-801c-afde-f64671389fd0"/><h3 id="2a7536a1-10ea-809e-ab6a-c1f8aa0af0bf" class="">🔹 9.2 Template-driven Forms</h3><p id="2a7536a1-10ea-8050-ae52-d5a59e66fa27" class="">Template-driven forms are <strong>declarative</strong> — most of the form logic lives inside the template.</p><h3 id="2a7536a1-10ea-8021-b145-e478a573b513" class="">🧱 <strong>Setup</strong></h3><p id="2a7536a1-10ea-8092-bc72-e4137b8c9e16" class="">First, import <code>FormsModule</code> in your feature module (or <code>AppModule</code>):</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8074-a3a9-ed1f6fd9da0f" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { FormsModule } from &#x27;@angular/forms&#x27;;
+
+@NgModule({
+  imports: [FormsModule],
+})
+export class AppModule {}</code></pre><hr id="2a7536a1-10ea-80d4-9e26-e11677154e0d"/><h3 id="2a7536a1-10ea-80b4-bc57-d26c1554f31e" class="">✍️ <strong>Example: Login Form</strong></h3><p id="2a7536a1-10ea-8027-96fc-d8e4642f6059" class=""><strong>HTML:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-808f-af59-e0da11845669" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;form #loginForm=&quot;ngForm&quot; (ngSubmit)=&quot;onSubmit(loginForm)&quot;&gt;
+  &lt;input
+    type=&quot;text&quot;
+    name=&quot;username&quot;
+    [(ngModel)]=&quot;user.username&quot;
+    required
+    placeholder=&quot;Username&quot;
+  /&gt;
+
+  &lt;input
+    type=&quot;password&quot;
+    name=&quot;password&quot;
+    [(ngModel)]=&quot;user.password&quot;
+    required
+    placeholder=&quot;Password&quot;
+  /&gt;
+
+  &lt;button type=&quot;submit&quot; [disabled]=&quot;!loginForm.valid&quot;&gt;Login&lt;/button&gt;
+&lt;/form&gt;
+</code></pre><p id="2a7536a1-10ea-8079-ba47-c0de9a829bf4" class=""><strong>Component:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8088-a190-dee61a48896b" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export class LoginComponent {
+  user = { username: &#x27;&#x27;, password: &#x27;&#x27; };
+
+  onSubmit(form: any) {
+    console.log(&#x27;Form Values:&#x27;, form.value);
+  }
+}
+</code></pre><hr id="2a7536a1-10ea-8011-8b51-c416ef8d0103"/><h3 id="2a7536a1-10ea-803a-ad93-fdff1d19d2da" class="">✅ <strong>Key Directives</strong></h3><table id="2a7536a1-10ea-80d1-93fe-db6f39b4644a" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-80ff-a508-db9f9ea51253"><th id="^Vl}" class="simple-table-header-color simple-table-header">Directive</th><th id="WGWD" class="simple-table-header-color simple-table-header">Description</th></tr></thead><tbody><tr id="2a7536a1-10ea-80f4-b0e1-dde6a7b625c7"><td id="^Vl}" class=""><code>ngModel</code></td><td id="WGWD" class="">Two-way data binding between input and component</td></tr><tr id="2a7536a1-10ea-806f-b4dd-ef769be66c6a"><td id="^Vl}" class=""><code>ngForm</code></td><td id="WGWD" class="">Automatically tracks the form’s state (valid, dirty, touched)</td></tr><tr id="2a7536a1-10ea-80c5-8f8a-d75be1131265"><td id="^Vl}" class=""><code>required</code>, <code>minlength</code>, <code>pattern</code></td><td id="WGWD" class="">Built-in validators</td></tr><tr id="2a7536a1-10ea-8057-85ab-e9c65d6f995a"><td id="^Vl}" class=""><code>[disabled]=&quot;!form.valid&quot;</code></td><td id="WGWD" class="">Reactive template control</td></tr></tbody></table><hr id="2a7536a1-10ea-80c0-9fd7-c9b884e714f3"/><h3 id="2a7536a1-10ea-80e2-b75f-f4669157ab5e" class="">⚠️ <strong>Limitations</strong></h3><ul id="2a7536a1-10ea-80e8-956b-deb280086232" class="bulleted-list"><li style="list-style-type:disc">Hard to scale with complex validation logic</li></ul><ul id="2a7536a1-10ea-8097-9caf-dafa7e251300" class="bulleted-list"><li style="list-style-type:disc">Difficult to test</li></ul><ul id="2a7536a1-10ea-800e-bf70-f94eee4db202" class="bulleted-list"><li style="list-style-type:disc">Validation logic spread between template and component</li></ul><p id="2a7536a1-10ea-8048-8d5d-f5e0369baaec" class="">Hence — <strong>Reactive Forms</strong> are preferred for large projects.</p><hr id="2a7536a1-10ea-8050-9f20-dbdf3b12043b"/><h3 id="2a7536a1-10ea-8091-83c6-d4a0a3c0b2d2" class="">🔹 9.3 Reactive Forms</h3><p id="2a7536a1-10ea-803c-a237-e3e9b3267f52" class="">Reactive Forms are <strong>programmatic</strong> — you define the form structure in the component using TypeScript.</p><h3 id="2a7536a1-10ea-8051-94ef-f6119788af5d" class="">🧱 <strong>Setup</strong></h3><p id="2a7536a1-10ea-80a7-8f88-edfbfe374701" class="">Import <code>ReactiveFormsModule</code>:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8022-a546-d43f0d308c94" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { ReactiveFormsModule } from &#x27;@angular/forms&#x27;;
+
+@NgModule({
+  imports: [ReactiveFormsModule],
+})
+export class AppModule {}
+</code></pre><hr id="2a7536a1-10ea-80b4-a62a-ca2a55b5d6d2"/><h3 id="2a7536a1-10ea-8085-906f-c58f3a3bfd69" class="">✍️ <strong>Example: Registration Form</strong></h3><p id="2a7536a1-10ea-801f-a816-ec8ba678f9dc" class=""><strong>Component:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8024-a88f-d77c97d75693" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { Component } from &#x27;@angular/core&#x27;;
+import { FormBuilder, FormGroup, Validators } from &#x27;@angular/forms&#x27;;
+
+@Component({
+  selector: &#x27;app-register&#x27;,
+  templateUrl: &#x27;./register.component.html&#x27;
+})
+export class RegisterComponent {
+  registerForm: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.registerForm = this.fb.group({
+      name: [&#x27;&#x27;, [Validators.required, Validators.minLength(3)]],
+      email: [&#x27;&#x27;, [Validators.required, Validators.email]],
+      password: [&#x27;&#x27;, [Validators.required, Validators.minLength(6)]],
+      confirmPassword: [&#x27;&#x27;]
+    });
+  }
+
+  onSubmit() {
+    console.log(this.registerForm.value);
+  }
+}
+</code></pre><p id="2a7536a1-10ea-807c-8abf-d5705ceaf348" class=""><strong>Template:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8073-8a6a-e278af38bee5" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;form [formGroup]=&quot;registerForm&quot; (ngSubmit)=&quot;onSubmit()&quot;&gt;
+  &lt;input formControlName=&quot;name&quot; placeholder=&quot;Name&quot; /&gt;
+  &lt;div *ngIf=&quot;registerForm.get(&#x27;name&#x27;)?.invalid &amp;&amp; registerForm.get(&#x27;name&#x27;)?.touched&quot;&gt;
+    Name is required (min 3 characters)
+  &lt;/div&gt;
+
+  &lt;input formControlName=&quot;email&quot; placeholder=&quot;Email&quot; /&gt;
+  &lt;div *ngIf=&quot;registerForm.get(&#x27;email&#x27;)?.hasError(&#x27;email&#x27;)&quot;&gt;
+    Invalid email address
+  &lt;/div&gt;
+
+  &lt;input type=&quot;password&quot; formControlName=&quot;password&quot; placeholder=&quot;Password&quot; /&gt;
+  &lt;button type=&quot;submit&quot; [disabled]=&quot;registerForm.invalid&quot;&gt;Register&lt;/button&gt;
+&lt;/form&gt;
+</code></pre><hr id="2a7536a1-10ea-80fa-9dbb-e95cdde2cf63"/><h3 id="2a7536a1-10ea-8049-b0bd-d0bff5a9e410" class="">✅ <strong>Key Classes</strong></h3><table id="2a7536a1-10ea-8096-9f67-db140c18c97c" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-80a8-933a-fa517209d715"><th id="[Iqi" class="simple-table-header-color simple-table-header">Class</th><th id="VXTb" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="2a7536a1-10ea-805e-8615-ca5325cbf03a"><td id="[Iqi" class=""><code>FormGroup</code></td><td id="VXTb" class="">Tracks a group of controls (like an object)</td></tr><tr id="2a7536a1-10ea-80ff-9224-d2ba66d24557"><td id="[Iqi" class=""><code>FormControl</code></td><td id="VXTb" class="">Tracks the value and validation status of a single control</td></tr><tr id="2a7536a1-10ea-80b0-9f4a-eea1d71fe68f"><td id="[Iqi" class=""><code>FormArray</code></td><td id="VXTb" class="">Manages an array of <code>FormControl</code>s (dynamic lists)</td></tr><tr id="2a7536a1-10ea-808d-94f6-c750aae796da"><td id="[Iqi" class=""><code>FormBuilder</code></td><td id="VXTb" class="">Shorthand for creating form groups and controls</td></tr></tbody></table><hr id="2a7536a1-10ea-8080-a672-cbcaad4f0d59"/><h3 id="2a7536a1-10ea-8010-b7d4-f2b304bd8123" class="">🔹 9.4 Accessing Form Controls</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-806e-9791-f1fa7b7218b4" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">const emailControl = this.registerForm.get(&#x27;email&#x27;);
+console.log(emailControl?.value);
+console.log(emailControl?.valid);
+</code></pre><hr id="2a7536a1-10ea-80b9-a4aa-dd48dfa249cd"/><h3 id="2a7536a1-10ea-80c4-9707-de16a572b3fc" class="">🔹 9.5 Validation (Reactive)</h3><p id="2a7536a1-10ea-808a-a50a-e583dd029597" class="">Angular provides <strong>built-in validators</strong> and allows <strong>custom validators</strong>.</p><h3 id="2a7536a1-10ea-8049-9f8a-fbee87242d8b" class="">🧱 Built-in Validators</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80c2-a6c4-e615770ff477" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">Validators.required
+Validators.minLength(3)
+Validators.maxLength(10)
+Validators.email
+Validators.pattern(&#x27;[A-Za-z]+&#x27;)
+</code></pre><hr id="2a7536a1-10ea-801d-aec5-ca096d9f0ef3"/><h3 id="2a7536a1-10ea-8036-983c-efa365b752d2" class="">🧩 Custom Validator Example</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a4-923f-c88a864b8003" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { AbstractControl, ValidationErrors } from &#x27;@angular/forms&#x27;;
+
+export function noSpaceValidator(control: AbstractControl): ValidationErrors | null {
+  return control.value?.includes(&#x27; &#x27;) ? { noSpace: true } : null;
+}
+</code></pre><p id="2a7536a1-10ea-80d0-a61b-c9aaf76e2179" class="">Usage:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-809c-85fb-fe2d098f9d25" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.form = this.fb.group({
+  username: [&#x27;&#x27;, [Validators.required, noSpaceValidator]]
+});
+</code></pre><hr id="2a7536a1-10ea-807f-87e2-ed3f393b8ea9"/><h3 id="2a7536a1-10ea-8018-b9fc-f8c86a6b0386" class="">🔹 9.6 Dynamic Forms with <code>FormArray</code></h3><p id="2a7536a1-10ea-8053-8aa0-f8f4ef964c95" class="">When you need to add/remove fields dynamically (e.g., multiple phone numbers):</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-800a-9a44-e5bbc490906b" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">phones: FormArray;
+
+constructor(private fb: FormBuilder) {
+  this.phones = this.fb.array([this.fb.control(&#x27;&#x27;)]);
+}
+
+addPhone() {
+  this.phones.push(this.fb.control(&#x27;&#x27;));
+}
+</code></pre><p id="2a7536a1-10ea-8067-9205-d881db76368d" class=""><strong>Template:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80b1-9ac9-f1140c99da01" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;div formArrayName=&quot;phones&quot;&gt;
+  &lt;div *ngFor=&quot;let phone of phones.controls; let i = index&quot;&gt;
+    &lt;input [formControlName]=&quot;i&quot; placeholder=&quot;Phone number {{ i+1 }}&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;button (click)=&quot;addPhone()&quot;&gt;Add Another&lt;/button&gt;
+</code></pre><hr id="2a7536a1-10ea-8031-b472-fff99014ac80"/><h3 id="2a7536a1-10ea-807b-8058-c4510ed0662e" class="">🔹 9.7 Observing Value Changes</h3><p id="2a7536a1-10ea-80f8-8f4b-d1e97dfcbb26" class="">Reactive forms expose <strong>Observables</strong> to listen to input changes.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-804c-8f79-d5e043759401" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.registerForm.get(&#x27;email&#x27;)?.valueChanges.subscribe(value =&gt; {
+  console.log(&#x27;Email changed:&#x27;, value);
+});
+</code></pre><p id="2a7536a1-10ea-80e5-b3cb-f05121e7971b" class="">You can use this to:</p><ul id="2a7536a1-10ea-80de-93ae-ddec8849e92c" class="bulleted-list"><li style="list-style-type:disc">Dynamically show suggestions</li></ul><ul id="2a7536a1-10ea-80f1-9010-e23785b668b9" class="bulleted-list"><li style="list-style-type:disc">Trigger conditional validations</li></ul><ul id="2a7536a1-10ea-80e6-97b1-e14dc7c90679" class="bulleted-list"><li style="list-style-type:disc">Integrate with APIs</li></ul><hr id="2a7536a1-10ea-8088-8bb5-d7ad8363da8f"/><h3 id="2a7536a1-10ea-802f-8c03-e71f257d9e94" class="">🔹 9.8 Resetting and Patching Values</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80e3-ba8f-d81930b34469" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.registerForm.reset(); // clears all
+this.registerForm.patchValue({ name: &#x27;Adithya&#x27; }); // update specific field
+</code></pre><hr id="2a7536a1-10ea-8000-965a-f218a58a47ed"/><h3 id="2a7536a1-10ea-80b6-9796-d74863dce9c0" class="">🔹 9.9 Async Validators</h3><p id="2a7536a1-10ea-8002-a659-c857d4b93b44" class="">Used for server-side validation (e.g., checking if a username is already taken):</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80b0-989c-c59804b95c73" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">username: [&#x27;&#x27;, null, this.usernameTakenValidator.bind(this)]
+
+usernameTakenValidator(control: AbstractControl) {
+  return this.http.get(`/api/check-username/${control.value}`).pipe(
+    map((res: any) =&gt; res.exists ? { usernameTaken: true } : null)
+  );
+}
+</code></pre><hr id="2a7536a1-10ea-80f4-a783-c760b4aaa470"/><h3 id="2a7536a1-10ea-8004-98d3-cec979458503" class="">💡 <strong>Best Practices</strong></h3><ol type="1" id="2a7536a1-10ea-8007-8528-e29a55e3e007" class="numbered-list" start="1"><li>Use <strong>Reactive Forms</strong> for scalable, testable applications.</li></ol><ol type="1" id="2a7536a1-10ea-80f4-997f-e9f0f0c0ffd7" class="numbered-list" start="2"><li>Create <strong>custom form components</strong> for reusability.</li></ol><ol type="1" id="2a7536a1-10ea-80a2-8b83-f66f653bc8c8" class="numbered-list" start="3"><li>Always provide <strong>form validation feedback</strong> to users.</li></ol><ol type="1" id="2a7536a1-10ea-8048-bfe4-d673c12d9a6b" class="numbered-list" start="4"><li>Use <code>FormBuilder</code> instead of manually creating <code>FormControl</code>s.</li></ol><ol type="1" id="2a7536a1-10ea-8099-b377-d800f21a04fa" class="numbered-list" start="5"><li>Group related fields logically using <code>FormGroup</code>.</li></ol><hr id="2a7536a1-10ea-80b4-9e64-d332b0faaee0"/><p id="2a7536a1-10ea-80cc-879d-c7c3ba37c0d3" class="">✅ <strong>Summary</strong></p><table id="2a7536a1-10ea-80d8-b41e-f781e38ddc4d" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-8088-a28d-d7a7bea5c6ff"><th id="bfNQ" class="simple-table-header-color simple-table-header">Concept</th><th id="LYee" class="simple-table-header-color simple-table-header">Template-driven</th><th id="BIX`" class="simple-table-header-color simple-table-header">Reactive</th></tr></thead><tbody><tr id="2a7536a1-10ea-80b8-9494-e7c3a9dc11f7"><td id="bfNQ" class="">Code Location</td><td id="LYee" class="">Mostly in template</td><td id="BIX`" class="">Mostly in component</td></tr><tr id="2a7536a1-10ea-8015-a81b-f989b6b0c176"><td id="bfNQ" class="">Validation</td><td id="LYee" class="">Template-based</td><td id="BIX`" class="">Code-based</td></tr><tr id="2a7536a1-10ea-8009-8629-e25917fc8365"><td id="bfNQ" class="">Form Control Access</td><td id="LYee" class="">Via template refs</td><td id="BIX`" class="">Via getters</td></tr><tr id="2a7536a1-10ea-8032-8674-e5d87b84c650"><td id="bfNQ" class="">Scalability</td><td id="LYee" class="">Low</td><td id="BIX`" class="">High</td></tr><tr id="2a7536a1-10ea-806f-9fa6-ffe631190963"><td id="bfNQ" class="">Suitable for</td><td id="LYee" class="">Simple forms</td><td id="BIX`" class="">Enterprise apps</td></tr></tbody></table><hr id="2a7536a1-10ea-802a-a210-cf53e04815a1"/><p id="2a7536a1-10ea-80b3-91c7-df3e68499b69" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

@@ -1,0 +1,797 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Chapter 4 - Directives and Pipes</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2a7536a1-10ea-803e-baf3-d056d438ca26" class="page sans"><header><h1 class="page-title">Chapter 4 - Directives and Pipes</h1><p class="page-description"></p></header><div class="page-body"><hr id="2a7536a1-10ea-8000-bd90-dcb0b6c2efc0"/><h3 id="2a7536a1-10ea-80d0-b3e2-c5d139b383bb" class=""><strong>1. What Are Directives?</strong></h3><p id="2a7536a1-10ea-801c-9523-f1116c1a25af" class="">In Angular, <strong>directives</strong> are classes that let you modify the <strong>DOM</strong> or <strong>component behavior</strong>.</p><p id="2a7536a1-10ea-8049-a811-fef1852561d8" class="">They’re like “instructions” that Angular executes on the HTML.</p><blockquote id="2a7536a1-10ea-8071-9794-effb9b85257b" class="">💡 All Angular components are technically directives with a template.</blockquote><hr id="2a7536a1-10ea-80e1-a942-fd4b319e0a02"/><h3 id="2a7536a1-10ea-8005-8697-f5d80636916c" class=""><strong>2. Types of Directives</strong></h3><table id="2a7536a1-10ea-80bc-b230-d3fbad3b569d" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-80d7-91cc-e5f42f6dab7c"><th id="`}kY" class="simple-table-header-color simple-table-header">Type</th><th id="u&lt;rR" class="simple-table-header-color simple-table-header">Description</th><th id="j]uO" class="simple-table-header-color simple-table-header">Example</th></tr></thead><tbody><tr id="2a7536a1-10ea-804e-9cb5-ecaff897945d"><td id="`}kY" class=""><strong>Component Directives</strong></td><td id="u&lt;rR" class="">Directives with a template (UI + logic).</td><td id="j]uO" class=""><code>@Component()</code></td></tr><tr id="2a7536a1-10ea-80c0-85a4-d63652d0939d"><td id="`}kY" class=""><strong>Structural Directives</strong></td><td id="u&lt;rR" class="">Change the DOM structure (add/remove elements).</td><td id="j]uO" class=""><code>*ngIf</code>, <code>*ngFor</code>, <code>*ngSwitch</code></td></tr><tr id="2a7536a1-10ea-80de-9e42-d7169fa310a0"><td id="`}kY" class=""><strong>Attribute Directives</strong></td><td id="u&lt;rR" class="">Change appearance or behavior of existing elements.</td><td id="j]uO" class=""><code>ngClass</code>, <code>ngStyle</code>, custom ones</td></tr></tbody></table><hr id="2a7536a1-10ea-808f-8960-c6696b67e6ad"/><h2 id="2a7536a1-10ea-8092-a0a7-c2de51b4dcf0" class="">🧱 <strong>A. Structural Directives</strong></h2><p id="2a7536a1-10ea-8053-ad41-dc27417f0fb4" class="">They’re prefixed with <code>*</code> and manipulate the DOM structure.</p><hr id="2a7536a1-10ea-8059-8a99-ebdd52c24f2d"/><h3 id="2a7536a1-10ea-8022-9e69-de5431c7690e" class=""><em>1. ngIf</em></h3><p id="2a7536a1-10ea-8037-8d16-c403331343e8" class="">Conditionally adds or removes elements from the DOM.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80aa-9ebf-e43217b7167c" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;p *ngIf=&quot;isLoggedIn; else guest&quot;&gt;Welcome back!&lt;/p&gt;
+&lt;ng-template #guest&gt;
+  &lt;p&gt;Please log in.&lt;/p&gt;
+&lt;/ng-template&gt;</code></pre><p id="2a7536a1-10ea-8083-a2f4-f72fb6ae8210" class=""><strong>Short form using </strong><code><strong>else</strong></code><strong>:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8019-9b01-c73e02ce8165" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;div *ngIf=&quot;user; else noUser&quot;&gt;
+  Hello {{ user.name }}
+&lt;/div&gt;
+&lt;ng-template #noUser&gt;No user found!&lt;/ng-template&gt;</code></pre><hr id="2a7536a1-10ea-80bd-bd51-ed29d58b4806"/><h3 id="2a7536a1-10ea-807c-ab71-da3f80178349" class=""><em>2. ngFor</em></h3><p id="2a7536a1-10ea-809b-b923-c9f5df00fff3" class="">Used to loop through a collection.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8012-815a-d4e81ae46afb" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;ul&gt;
+  &lt;li *ngFor=&quot;let user of users; index as i&quot;&gt;
+    {{ i + 1 }}. {{ user.name }}
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre><p id="2a7536a1-10ea-80b8-bfbc-e8684b3f3077" class=""><strong>With trackBy for performance:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-806b-a826-e7181baf07a9" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;li *ngFor=&quot;let user of users; trackBy: trackByUserId&quot;&gt;{{ user.name }}&lt;/li&gt;</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8055-bb1e-c5f1b460ae0d" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">trackByUserId(index: number, user: any) {
+  return user.id;
+}</code></pre><hr id="2a7536a1-10ea-8094-ab1c-cbca5ed9ca06"/><h3 id="2a7536a1-10ea-8067-a9d8-f07ef7c03bec" class=""><em>3. ngSwitch</em></h3><p id="2a7536a1-10ea-8090-919f-cfedbde416a1" class="">Used for multiple conditional views.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8068-8b7c-f23ed5c9268a" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;div [ngSwitch]=&quot;role&quot;&gt;
+  &lt;p *ngSwitchCase=&quot;&#x27;admin&#x27;&quot;&gt;Welcome Admin!&lt;/p&gt;
+  &lt;p *ngSwitchCase=&quot;&#x27;user&#x27;&quot;&gt;Welcome User!&lt;/p&gt;
+  &lt;p *ngSwitchDefault&gt;Guest Access&lt;/p&gt;
+&lt;/div&gt;</code></pre><hr id="2a7536a1-10ea-8076-8b16-d8f8f5411ede"/><p id="2a7536a1-10ea-80c4-b738-da5dca0bfbac" class="">The new <code>@if</code>, <code>@for</code>, and <code>@switch</code> <strong>template control flow syntax</strong> were introduced in <strong>Angular 17</strong> as a <em>modern alternative</em> to the older <code>*ngIf</code>, <code>*ngFor</code>, and <code>*ngSwitch</code> directives.</p><h2 id="2a7536a1-10ea-8027-8ec4-ef5c0ae1e8bc" class=""><strong>Modern Control Flow Syntax (Angular 17+)</strong></h2><hr id="2a7536a1-10ea-809d-a854-e99635a1513b"/><h3 id="2a7536a1-10ea-806d-94ed-ca1780c98095" class=""><strong>1. Why Angular Introduced @if and @for</strong></h3><p id="2a7536a1-10ea-80a5-b270-ef3d505f5c67" class="">Angular’s new block syntax:</p><ul id="2a7536a1-10ea-8019-a8fc-f4a508e6edb2" class="bulleted-list"><li style="list-style-type:disc">Uses <strong>JavaScript-like control flow</strong> for cleaner templates.</li></ul><ul id="2a7536a1-10ea-80d6-b4ad-d2a539cd46fb" class="bulleted-list"><li style="list-style-type:disc">Provides <strong>better performance</strong> and <strong>type checking</strong>.</li></ul><ul id="2a7536a1-10ea-803c-93e5-c7a048b63dd4" class="bulleted-list"><li style="list-style-type:disc">Eliminates the  and <code>&lt;ng-container&gt;</code> boilerplate.</li></ul><hr id="2a7536a1-10ea-807d-8c18-e504cea82466"/><h3 id="2a7536a1-10ea-800e-a6ed-cf9ffdc3bf4d" class=""><strong>2. </strong><code><strong>@if</strong></code><strong> Block</strong></h3><p id="2a7536a1-10ea-8086-baf6-f6e2b7d7963a" class="">Old way:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80ac-853c-c88fbe12f89a" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;div *ngIf=&quot;user; else guest&quot;&gt;
+  Welcome, {{ user.name }}!
+&lt;/div&gt;
+&lt;ng-template #guest&gt;
+  Please log in.
+&lt;/ng-template&gt;</code></pre><p id="2a7536a1-10ea-8070-9ce2-f0eb8ff45563" class="">New way:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8001-a388-cb992e1a33e5" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">@if (user) {
+  &lt;div&gt;Welcome, {{ user.name }}!&lt;/div&gt;
+} @else {
+  &lt;div&gt;Please log in.&lt;/div&gt;
+}</code></pre><p id="2a7536a1-10ea-80aa-a482-c73eaeb6b15e" class="">✅ <strong>Benefits:</strong></p><ul id="2a7536a1-10ea-80dd-930e-fe78378d7b8b" class="bulleted-list"><li style="list-style-type:disc">Readable and more natural syntax.</li></ul><ul id="2a7536a1-10ea-8055-ac6f-eb3119711ee3" class="bulleted-list"><li style="list-style-type:disc">No need for <code>&lt;ng-template&gt;</code> or template refs.</li></ul><hr id="2a7536a1-10ea-8090-989a-db3684792fed"/><h3 id="2a7536a1-10ea-80d5-aece-eb89da0f3f47" class=""><strong>3. </strong><code><strong>@for</strong></code><strong> Block</strong></h3><p id="2a7536a1-10ea-8078-b897-cb9bd91efe00" class="">Old way:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8005-bbf8-fdaf2e11b200" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;li *ngFor=&quot;let item of items; trackBy: trackById&quot;&gt;
+  {{ item.name }}
+&lt;/li&gt;</code></pre><p id="2a7536a1-10ea-802a-ae06-e6032cbdddee" class="">New way:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8024-a1bc-c4c195fbb337" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">@for (item of items; track item.id) {
+  &lt;li&gt;{{ item.name }}&lt;/li&gt;
+} @empty {
+  &lt;li&gt;No items found.&lt;/li&gt;
+}</code></pre><p id="2a7536a1-10ea-80dd-a4f2-c06a3160ec6d" class="">✅ <strong>Features:</strong></p><ul id="2a7536a1-10ea-803e-bd68-c6a864cd4ba5" class="bulleted-list"><li style="list-style-type:disc">Supports <code>track</code> for efficient rendering (same as <code>trackBy</code>).</li></ul><ul id="2a7536a1-10ea-801c-a00a-f411cd1a8edb" class="bulleted-list"><li style="list-style-type:disc"><code>@empty</code> block for handling empty arrays.</li></ul><ul id="2a7536a1-10ea-80b9-bd35-e35a58778892" class="bulleted-list"><li style="list-style-type:disc">Better performance and less syntax clutter.</li></ul><hr id="2a7536a1-10ea-80e8-9acf-cf82569a69ac"/><h3 id="2a7536a1-10ea-80e4-8134-d9313518ecd1" class=""><strong>4. </strong><code><strong>@switch</strong></code><strong> Block</strong></h3><p id="2a7536a1-10ea-80a3-9931-fab1327a1736" class="">Old way:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8042-abe7-ebb3dbdfd0ca" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;div [ngSwitch]=&quot;role&quot;&gt;
+  &lt;p *ngSwitchCase=&quot;&#x27;admin&#x27;&quot;&gt;Admin Access&lt;/p&gt;
+  &lt;p *ngSwitchCase=&quot;&#x27;user&#x27;&quot;&gt;User Access&lt;/p&gt;
+  &lt;p *ngSwitchDefault&gt;Guest Access&lt;/p&gt;
+&lt;/div&gt;</code></pre><p id="2a7536a1-10ea-80ff-81d1-c073f5c6bf29" class="">New way:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80f0-b622-cc62e0cbb48f" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">@switch (role) {
+  @case (&#x27;admin&#x27;) {
+    &lt;p&gt;Admin Access&lt;/p&gt;
+  }
+  @case (&#x27;user&#x27;) {
+    &lt;p&gt;User Access&lt;/p&gt;
+  }
+  @default {
+    &lt;p&gt;Guest Access&lt;/p&gt;
+  }
+}</code></pre><hr id="2a7536a1-10ea-800e-b0b4-d5ec8adb0b4c"/><h3 id="2a7536a1-10ea-8067-864e-c98ff6aba285" class="">✅ <strong>Key Benefits of New Syntax</strong></h3><table id="2a7536a1-10ea-80ff-b187-e24d8850ed55" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-8052-aaeb-d83bb1df8bb7"><th id="t[uI" class="simple-table-header-color simple-table-header">Feature</th><th id="zJLR" class="simple-table-header-color simple-table-header">Old Syntax</th><th id="pJzl" class="simple-table-header-color simple-table-header">New Syntax</th></tr></thead><tbody><tr id="2a7536a1-10ea-806e-b4e7-d71417e8c11c"><td id="t[uI" class="">If condition</td><td id="zJLR" class=""><code>*ngIf</code> + <code>&lt;ng-template&gt;</code></td><td id="pJzl" class=""><code>@if</code> / <code>@else</code></td></tr><tr id="2a7536a1-10ea-8005-ab13-eeb10efdb995"><td id="t[uI" class="">Loop</td><td id="zJLR" class=""><code>*ngFor</code></td><td id="pJzl" class=""><code>@for</code> / <code>@empty</code></td></tr><tr id="2a7536a1-10ea-8097-a56a-d71827143a01"><td id="t[uI" class="">Switch</td><td id="zJLR" class=""><code>*ngSwitch</code></td><td id="pJzl" class=""><code>@switch</code> / <code>@case</code> / <code>@default</code></td></tr><tr id="2a7536a1-10ea-809e-beff-d0a37db63b14"><td id="t[uI" class="">Type checking</td><td id="zJLR" class="">Partial</td><td id="pJzl" class="">Full</td></tr><tr id="2a7536a1-10ea-80e8-9c8d-fda8128cf466"><td id="t[uI" class="">Readability</td><td id="zJLR" class="">Moderate</td><td id="pJzl" class="">Excellent</td></tr><tr id="2a7536a1-10ea-8000-a975-ed06e389cbdd"><td id="t[uI" class="">Performance</td><td id="zJLR" class="">Good</td><td id="pJzl" class="">Better (block-optimized rendering)</td></tr></tbody></table><hr id="2a7536a1-10ea-8040-bcfa-f798140bae67"/><h3 id="2a7536a1-10ea-80a8-af56-d2f39489d524" class="">⚠️ <strong>Backward Compatibility</strong></h3><ul id="2a7536a1-10ea-808f-84f9-df441c31e1bb" class="bulleted-list"><li style="list-style-type:disc">The new syntax <strong>coexists</strong> with <code>ngIf</code>, <code>ngFor</code>, etc.</li></ul><ul id="2a7536a1-10ea-807c-87f7-cb490e72f592" class="bulleted-list"><li style="list-style-type:disc">You can safely mix both in the same template.</li></ul><ul id="2a7536a1-10ea-80cc-812b-c56cc0e4be80" class="bulleted-list"><li style="list-style-type:disc">Works automatically from <strong>Angular v17+</strong>; no configuration needed.</li></ul><hr id="2a7536a1-10ea-8072-a460-f1642a91e9ff"/><p id="2a7536a1-10ea-807f-9a6d-dbf76861132c" class="">So you can think of it like:</p><blockquote id="2a7536a1-10ea-8093-99ac-f145edaf7cf6" class="">🔄 @if, @for, and @switch are the modern, block-style replacements for Angular’s structural directives.</blockquote><hr id="2a7536a1-10ea-80f8-84fa-d6e07842f7a1"/><h2 id="2a7536a1-10ea-806c-a170-d1bdb5881eba" class="">🎨 <strong>B. Attribute Directives</strong></h2><p id="2a7536a1-10ea-80f1-bcf9-c83dda76fd5b" class="">These modify the <strong>appearance or behavior</strong> of elements without changing the DOM structure.</p><hr id="2a7536a1-10ea-80f4-9d66-e2a09a811df4"/><h3 id="2a7536a1-10ea-8025-aa6f-cc387c5bf845" class=""><strong>1. ngClass</strong></h3><p id="2a7536a1-10ea-801c-bdff-e6ce943d8f2a" class="">Conditionally apply CSS classes.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8055-9c1c-df3ee5e7b45e" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;div [ngClass]=&quot;{&#x27;active&#x27;: isActive, &#x27;inactive&#x27;: !isActive}&quot;&gt;
+  Status: {{ isActive ? &#x27;Active&#x27; : &#x27;Inactive&#x27; }}
+&lt;/div&gt;</code></pre><hr id="2a7536a1-10ea-80c0-bcde-e84a4c7ff40f"/><h3 id="2a7536a1-10ea-801e-91da-c5c2ac4cd88a" class=""><strong>2. ngStyle</strong></h3><p id="2a7536a1-10ea-80a0-8200-c57518132411" class="">Apply inline styles dynamically.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-808b-a9a1-f7c61bd1ce76" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;p [ngStyle]=&quot;{&#x27;color&#x27;: isOnline ? &#x27;green&#x27; : &#x27;red&#x27;}&quot;&gt;
+  User is {{ isOnline ? &#x27;Online&#x27; : &#x27;Offline&#x27; }}
+&lt;/p&gt;</code></pre><hr id="2a7536a1-10ea-8072-afd5-e3c88d6ba837"/><h3 id="2a7536a1-10ea-800a-a141-c2ba1eeea644" class=""><strong>3. Custom Attribute Directive Example</strong></h3><h3 id="2a7536a1-10ea-801b-bdb7-e7dc68e757be" class="">Create a directive that highlights text on hover:</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-807c-bb64-c589079747f3" class="code code-wrap"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">ng g directive highlight</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8057-906e-c1de427fd857" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { Directive, ElementRef, HostListener, Input } from &#x27;@angular/core&#x27;;
+
+@Directive({
+  selector: &#x27;[appHighlight]&#x27;
+})
+export class HighlightDirective {
+  @Input() appHighlight: string = &#x27;yellow&#x27;;
+
+  constructor(private el: ElementRef) {}
+
+  @HostListener(&#x27;mouseenter&#x27;) onMouseEnter() {
+    this.highlight(this.appHighlight);
+  }
+
+  @HostListener(&#x27;mouseleave&#x27;) onMouseLeave() {
+    this.highlight(&#x27;&#x27;);
+  }
+
+  private highlight(color: string) {
+    this.el.nativeElement.style.backgroundColor = color;
+  }
+}
+</code></pre><p id="2a7536a1-10ea-8051-84c3-d4b6d247315a" class="">Usage:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8002-a943-e014762fb108" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;p appHighlight=&quot;lightblue&quot;&gt;Hover over me!&lt;/p&gt;</code></pre><hr id="2a7536a1-10ea-8055-a26b-cf2a2824a20b"/><h3 id="2a7536a1-10ea-8085-ac35-d09f053cf8fe" class=""><strong>4. HostListener &amp; HostBinding</strong></h3><p id="2a7536a1-10ea-802a-b365-d906949663ca" class="">Used within directives to interact with the DOM.</p><p id="2a7536a1-10ea-803e-843b-d1837738feeb" class=""><strong>Example:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-806d-a0fd-f8c13c295d02" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@HostBinding(&#x27;style.backgroundColor&#x27;) bgColor: string = &#x27;&#x27;;
+
+@HostListener(&#x27;mouseenter&#x27;) onEnter() {
+  this.bgColor = &#x27;lightgreen&#x27;;
+}
+
+@HostListener(&#x27;mouseleave&#x27;) onLeave() {
+  this.bgColor = &#x27;&#x27;;
+}</code></pre><hr id="2a7536a1-10ea-804c-824f-d9b6082abd66"/><h2 id="2a7536a1-10ea-80e2-b9f8-ec33c7662753" class="">🧮 <strong>C. Pipes</strong></h2><p id="2a7536a1-10ea-8015-9869-f720e82142e8" class="">Pipes are used to <strong>transform data</strong> directly in the template without changing the component logic.</p><p id="2a7536a1-10ea-8034-b39d-fc8ca6478f05" class="">They’re like <strong>filters</strong> in other frameworks.</p><hr id="2a7536a1-10ea-8044-b615-ed7e0462aa3d"/><h3 id="2a7536a1-10ea-8010-ba17-f8d9f99957f4" class=""><strong>1. Built-in Pipes</strong></h3><table id="2a7536a1-10ea-803e-b9a3-ee496bc20fd4" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-8092-8ac3-c8dc22b1c384"><th id="ZzZy" class="simple-table-header-color simple-table-header">Pipe</th></tr></thead><tbody><tr id="2a7536a1-10ea-803a-896d-d13c0c049cd9"><td id="ZzZy" class=""><code>date</code></td></tr><tr id="2a7536a1-10ea-80ee-ab0b-d04ac06afa7c"><td id="ZzZy" class=""><code>uppercase</code></td></tr><tr id="2a7536a1-10ea-80e7-9f33-ef60fa508a59"><td id="ZzZy" class=""><code>lowercase</code></td></tr><tr id="2a7536a1-10ea-80f4-bd9c-d1d874321ef6"><td id="ZzZy" class=""><code>titlecase</code></td></tr><tr id="2a7536a1-10ea-80b0-9176-dff86430292f"><td id="ZzZy" class=""><code>currency</code></td></tr><tr id="2a7536a1-10ea-80ab-b314-df1252b70149"><td id="ZzZy" class=""><code>percent</code></td></tr><tr id="2a7536a1-10ea-80ee-b0e3-f648b267222f"><td id="ZzZy" class=""><code>json</code></td></tr><tr id="2a7536a1-10ea-8081-87ca-d4c483a805bd"><td id="ZzZy" class=""><code>slice</code></td></tr></tbody></table><hr id="2a7536a1-10ea-8032-9a66-dd0e5e12e8d6"/><h3 id="2a7536a1-10ea-80e5-a18d-d086c0fe7a89" class=""><strong>2. Chaining Pipes</strong></h3><p id="2a7536a1-10ea-8023-a903-e57ba618e2e1" class="">You can apply multiple pipes in sequence.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8050-8c9a-fa3308b28597" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">{{ name | uppercase | slice:0:3 }}</code></pre><hr id="2a7536a1-10ea-8096-bc26-d126ff2634a5"/><h3 id="2a7536a1-10ea-805b-9d29-ede9caf98884" class=""><strong>3. Parameterized Pipes</strong></h3><p id="2a7536a1-10ea-8015-85cf-c349bf3f4ab0" class="">Some pipes accept arguments.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80ef-b740-db2a1f92024f" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">{{ today | date:&#x27;fullDate&#x27; }}</code></pre><hr id="2a7536a1-10ea-80f8-b4d3-e6bd821eff42"/><h3 id="2a7536a1-10ea-80e3-9466-c9be60a31ab1" class=""><strong>4. Custom Pipe Example</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8093-aa19-e547b1f8ef0d" class="code code-wrap"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">ng g pipe truncate</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8040-8da7-c0f6c5850f38" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { Pipe, PipeTransform } from &#x27;@angular/core&#x27;;
+
+@Pipe({
+  name: &#x27;truncate&#x27;
+})
+export class TruncatePipe implements PipeTransform {
+  transform(value: string, limit: number = 20): string {
+    return value.length &gt; limit ? value.substring(0, limit) + &#x27;...&#x27; : value;
+  }
+}</code></pre><p id="2a7536a1-10ea-802b-b5bb-d2657e4ec2ad" class="">Usage:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-809f-8cdb-cedafe0707c5" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;p&gt;{{ &#x27;Angular is a great framework&#x27; | truncate:10 }}&lt;/p&gt;</code></pre><p id="2a7536a1-10ea-804f-906d-cf1df7caa744" class="">Output:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8081-a44f-d5f0ee5730b2" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">Angular is...</code></pre><hr id="2a7536a1-10ea-8093-8cc8-c390cce9b441"/><h3 id="2a7536a1-10ea-8059-888f-c219f21bcd41" class=""><strong>5. Pure vs Impure Pipes</strong></h3><ul id="2a7536a1-10ea-8067-9e1e-e34904699129" class="bulleted-list"><li style="list-style-type:disc"><strong>Pure Pipes:</strong> Run only when input changes. (Default)</li></ul><ul id="2a7536a1-10ea-8051-b43c-d1bc6505f3c0" class="bulleted-list"><li style="list-style-type:disc"><strong>Impure Pipes:</strong> Run on <em>every</em> change detection cycle → use with caution.</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80e6-91a2-f0a6491bad85" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@Pipe({
+  name: &#x27;myPipe&#x27;,
+  pure: false
+})</code></pre><hr id="2a7536a1-10ea-80f2-9a13-fe0e0efc5749"/><h3 id="2a7536a1-10ea-8005-b1a0-e3cc8024bbbc" class="">✅ <strong>Key Takeaways</strong></h3><ul id="2a7536a1-10ea-80a1-846c-c0ca83b2acd9" class="bulleted-list"><li style="list-style-type:disc"><strong>Directives</strong> → modify DOM structure or behavior.</li></ul><ul id="2a7536a1-10ea-80d8-b033-d53a4d17d900" class="bulleted-list"><li style="list-style-type:disc"><strong>Structural directives</strong> → <code>ngIf</code>, <code>ngFor</code>, <code>ngSwitch</code>.</li></ul><ul id="2a7536a1-10ea-80ea-89c8-dc28c9923380" class="bulleted-list"><li style="list-style-type:disc"><strong>Attribute directives</strong> → change style/appearance dynamically.</li></ul><ul id="2a7536a1-10ea-8034-ae7f-f5e149048fc8" class="bulleted-list"><li style="list-style-type:disc"><strong>Pipes</strong> → transform data directly in templates.</li></ul><ul id="2a7536a1-10ea-800c-bf5f-ca1998ee6b1e" class="bulleted-list"><li style="list-style-type:disc">Custom directives and pipes give Angular immense flexibility.</li></ul><hr id="2a7536a1-10ea-8078-8869-d4d50fda89ae"/></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

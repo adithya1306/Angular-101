@@ -1,0 +1,848 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Chapter 6 - HTTP Requests &amp; API Communication</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2a7536a1-10ea-8061-9488-eb09327d9744" class="page sans"><header><h1 class="page-title">Chapter 6 - HTTP Requests &amp; API Communication</h1><p class="page-description"></p></header><div class="page-body"><h3 id="2a7536a1-10ea-80ee-a80f-f2a43a2560b5" class=""><strong>1. Introduction</strong></h3><p id="2a7536a1-10ea-8088-9496-d7f307d176cb" class="">The <strong>HttpClient</strong> module in Angular provides a powerful and consistent API for making HTTP requests to servers.</p><p id="2a7536a1-10ea-80d3-873a-e556aadcff87" class="">It supports:</p><ul id="2a7536a1-10ea-8089-9408-fae99291b5f0" class="bulleted-list"><li style="list-style-type:disc">CRUD operations</li></ul><ul id="2a7536a1-10ea-8080-b50c-e9c16030e79b" class="bulleted-list"><li style="list-style-type:disc">Interceptors</li></ul><ul id="2a7536a1-10ea-8095-bd24-c77bda3e14cd" class="bulleted-list"><li style="list-style-type:disc">Typed responses</li></ul><ul id="2a7536a1-10ea-8031-adf5-cfc19107d9e1" class="bulleted-list"><li style="list-style-type:disc">Error handling</li></ul><ul id="2a7536a1-10ea-8046-9277-ff20211c44cd" class="bulleted-list"><li style="list-style-type:disc">Request cancellation</li></ul><ul id="2a7536a1-10ea-80c0-89c0-e3b8992a1acd" class="bulleted-list"><li style="list-style-type:disc">Observables (RxJS)</li></ul><p id="2a7536a1-10ea-8038-aa3b-e5aa59d3d054" class="">To use it:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80d0-8e78-f24b8ab6b0a1" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { HttpClientModule } from &#x27;@angular/common/http&#x27;;
+
+@NgModule({
+  imports: [HttpClientModule],
+})
+export class AppModule {}</code></pre><hr id="2a7536a1-10ea-8059-be42-c68692693679"/><h3 id="2a7536a1-10ea-80e5-a7aa-e58c7222fef0" class=""><strong>2. HttpClient Basics</strong></h3><h3 id="2a7536a1-10ea-8088-b7c8-e424f2d132ad" class=""><strong>a. Injecting HttpClient</strong></h3><p id="2a7536a1-10ea-8083-85db-fc1f104b226b" class="">You can inject <code>HttpClient</code> into any service or component.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80e8-ae5a-c7d7a55f4727" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { HttpClient } from &#x27;@angular/common/http&#x27;;
+import { Injectable } from &#x27;@angular/core&#x27;;
+import { Observable } from &#x27;rxjs&#x27;;
+import { User } from &#x27;../models/user.model&#x27;;
+
+@Injectable({ providedIn: &#x27;root&#x27; })
+export class UserService {
+  private baseUrl = &#x27;https://api.example.com/users&#x27;;
+
+  constructor(private http: HttpClient) {}
+
+  getUsers(): Observable&lt;User[]&gt; {
+    return this.http.get&lt;User[]&gt;(this.baseUrl);
+  }
+
+  getUserById(id: number): Observable&lt;User&gt; {
+    return this.http.get&lt;User&gt;(`${this.baseUrl}/${id}`);
+  }
+
+  createUser(user: User): Observable&lt;User&gt; {
+    return this.http.post&lt;User&gt;(this.baseUrl, user);
+  }
+
+  updateUser(user: User): Observable&lt;User&gt; {
+    return this.http.put&lt;User&gt;(`${this.baseUrl}/${user.id}`, user);
+  }
+
+  deleteUser(id: number): Observable&lt;void&gt; {
+    return this.http.delete&lt;void&gt;(`${this.baseUrl}/${id}`);
+  }
+}</code></pre><hr id="2a7536a1-10ea-80fd-b326-e4b52cd548dd"/><h3 id="2a7536a1-10ea-808a-9aa5-c343280d7477" class=""><strong>3. Http Methods</strong></h3><table id="2a7536a1-10ea-80df-94a3-f75f78fbd219" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-80d0-a0f4-e909041c898b"><th id="=:yH" class="simple-table-header-color simple-table-header">Method</th><th id="|ndE" class="simple-table-header-color simple-table-header">Description</th><th id="EH={" class="simple-table-header-color simple-table-header">Example</th></tr></thead><tbody><tr id="2a7536a1-10ea-8025-82cc-c253402dd23d"><td id="=:yH" class=""><code>GET</code></td><td id="|ndE" class="">Retrieve data</td><td id="EH={" class=""><code>this.http.get(url)</code></td></tr><tr id="2a7536a1-10ea-8048-96ac-dacca4555fdf"><td id="=:yH" class=""><code>POST</code></td><td id="|ndE" class="">Send new data</td><td id="EH={" class=""><code>this.http.post(url, data)</code></td></tr><tr id="2a7536a1-10ea-80ba-8c42-eec3ff442e24"><td id="=:yH" class=""><code>PUT</code></td><td id="|ndE" class="">Replace existing data</td><td id="EH={" class=""><code>this.http.put(url, data)</code></td></tr><tr id="2a7536a1-10ea-80c7-9522-cf2920468cdb"><td id="=:yH" class=""><code>PATCH</code></td><td id="|ndE" class="">Update partial data</td><td id="EH={" class=""><code>this.http.patch(url, data)</code></td></tr><tr id="2a7536a1-10ea-807c-9249-d1bc2c3b3343"><td id="=:yH" class=""><code>DELETE</code></td><td id="|ndE" class="">Remove data</td><td id="EH={" class=""><code>this.http.delete(url)</code></td></tr></tbody></table><p id="2a7536a1-10ea-805d-817e-f4acdeb5b9ec" class="">All return <strong>Observables</strong>, which you can subscribe to in a component.</p><hr id="2a7536a1-10ea-8054-8870-d76f3cef38fa"/><h3 id="2a7536a1-10ea-8078-9da3-d2b98db3f821" class=""><strong>4. Subscribing to Observables</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80cf-b2ee-fa5f090d904b" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.userService.getUsers().subscribe({
+  next: (data) =&gt; (this.users = data),
+  error: (err) =&gt; console.error(&#x27;Error:&#x27;, err),
+  complete: () =&gt; console.log(&#x27;Request complete&#x27;)
+});</code></pre><p id="2a7536a1-10ea-806c-9034-cd5c437dd1a3" class="">You can also use the <strong>async pipe</strong> (preferred for cleaner code):</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8007-beb9-e96afd5bfbbd" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">&lt;div *ngFor=&quot;let user of userService.getUsers() | async&quot;&gt;
+  {{ user.name }}
+&lt;/div&gt;</code></pre><hr id="2a7536a1-10ea-80c7-9402-d8346fe942c6"/><h3 id="2a7536a1-10ea-802a-a935-d496c7849b32" class=""><strong>5. HTTP Options (Headers, Params, etc.)</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-808e-9215-d4b0c3da6ad0" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { HttpHeaders, HttpParams } from &#x27;@angular/common/http&#x27;;
+
+const headers = new HttpHeaders({
+  &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,
+  Authorization: &#x27;Bearer token_here&#x27;
+});
+
+const params = new HttpParams().set(&#x27;page&#x27;, &#x27;1&#x27;).set(&#x27;limit&#x27;, &#x27;10&#x27;);
+
+this.http.get(&#x27;/api/users&#x27;, { headers, params }).subscribe();</code></pre><hr id="2a7536a1-10ea-802e-94b9-ca2f5e3e81b4"/><h3 id="2a7536a1-10ea-8097-a2f8-f1bc7e24853d" class=""><strong>6. Handling Errors</strong></h3><p id="2a7536a1-10ea-8048-b819-f5b32ad9d6bb" class="">Angular provides the <code>catchError</code> operator from RxJS for elegant error handling.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8070-b89b-e40c0445b395" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { catchError, throwError } from &#x27;rxjs&#x27;;
+
+getUsers(): Observable&lt;User[]&gt; {
+  return this.http.get&lt;User[]&gt;(this.baseUrl).pipe(
+    catchError((error) =&gt; {
+      console.error(&#x27;Error occurred:&#x27;, error);
+      return throwError(() =&gt; new Error(&#x27;Something went wrong!&#x27;));
+    })
+  );
+}</code></pre><p id="2a7536a1-10ea-8044-8d8c-ee48e73dc9e9" class="">You can also centralize this in <strong>interceptors</strong> (see below).</p><hr id="2a7536a1-10ea-8049-be52-e62645091f8a"/><h3 id="2a7536a1-10ea-80fb-acc4-d5a137c033e0" class=""><strong>7. HTTP Interceptors</strong></h3><p id="2a7536a1-10ea-805f-9284-ee7a52b4923d" class="">Interceptors allow you to <strong>modify requests and responses globally</strong>, for example:</p><ul id="2a7536a1-10ea-80f5-bb39-fedf4de0e945" class="bulleted-list"><li style="list-style-type:disc">Adding JWT tokens</li></ul><ul id="2a7536a1-10ea-80fc-8d97-e140a34ed0d8" class="bulleted-list"><li style="list-style-type:disc">Logging</li></ul><ul id="2a7536a1-10ea-80d2-b302-f34b4482e51e" class="bulleted-list"><li style="list-style-type:disc">Handling errors globally</li></ul><ul id="2a7536a1-10ea-8006-bf8c-fbe77b7b718c" class="bulleted-list"><li style="list-style-type:disc">Showing loading indicators</li></ul><h3 id="2a7536a1-10ea-8059-aede-c81655075a1d" class="">Example: JWT Auth Interceptor</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-805c-8e16-f1e960a79db8" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { Injectable } from &#x27;@angular/core&#x27;;
+import {
+  HttpInterceptor,
+  HttpRequest,
+  HttpHandler,
+  HttpEvent
+} from &#x27;@angular/common/http&#x27;;
+import { Observable } from &#x27;rxjs&#x27;;
+
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest&lt;any&gt;, next: HttpHandler): Observable&lt;HttpEvent&lt;any&gt;&gt; {
+    const token = localStorage.getItem(&#x27;token&#x27;);
+
+    if (token) {
+      const cloned = req.clone({
+        setHeaders: { Authorization: `Bearer ${token}` }
+      });
+      return next.handle(cloned);
+    }
+
+    return next.handle(req);
+  }
+}</code></pre><h3 id="2a7536a1-10ea-80b3-a1d3-d7b82fffb7e8" class="">Register the Interceptor</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-808d-95f4-d4ad56dadfd0" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { HTTP_INTERCEPTORS } from &#x27;@angular/common/http&#x27;;
+
+@NgModule({
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ]
+})
+export class AppModule {}</code></pre><hr id="2a7536a1-10ea-80c8-a95a-fb4e2e4c2fc0"/><h3 id="2a7536a1-10ea-8021-bfb8-d558f11ee611" class=""><strong>8. Global Error Interceptor</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80c3-bb05-ead4fcf13fc8" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { Injectable } from &#x27;@angular/core&#x27;;
+import {
+  HttpInterceptor,
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpErrorResponse
+} from &#x27;@angular/common/http&#x27;;
+import { Observable, catchError, throwError } from &#x27;rxjs&#x27;;
+
+@Injectable()
+export class ErrorInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest&lt;any&gt;, next: HttpHandler): Observable&lt;HttpEvent&lt;any&gt;&gt; {
+    return next.handle(req).pipe(
+      catchError((error: HttpErrorResponse) =&gt; {
+        let message = &#x27;&#x27;;
+        switch (error.status) {
+          case 400: message = &#x27;Bad Request&#x27;; break;
+          case 401: message = &#x27;Unauthorized&#x27;; break;
+          case 404: message = &#x27;Not Found&#x27;; break;
+          case 500: message = &#x27;Server Error&#x27;; break;
+          default: message = &#x27;Unexpected Error&#x27;; break;
+        }
+        console.error(&#x27;Error:&#x27;, message);
+        return throwError(() =&gt; new Error(message));
+      })
+    );
+  }
+}</code></pre><hr id="2a7536a1-10ea-8047-8526-c97d3b6a1b61"/><h3 id="2a7536a1-10ea-808f-8648-fbf1bd94b40b" class=""><strong>9. Request Cancellation</strong></h3><p id="2a7536a1-10ea-80c8-a96b-e4302df40912" class="">You can use <strong>RxJS </strong><code><strong>takeUntil</strong></code> or <strong>AbortController</strong> to cancel pending requests when navigating away or destroying a component.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8039-9b70-fab80d309b51" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">private destroy$ = new Subject&lt;void&gt;();
+
+ngOnInit() {
+  this.userService.getUsers()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(users =&gt; this.users = users);
+}
+
+ngOnDestroy() {
+  this.destroy$.next();
+  this.destroy$.complete();
+}</code></pre><hr id="2a7536a1-10ea-80ef-8aa3-c3f696206db0"/><h3 id="2a7536a1-10ea-80f1-afb2-eb4846a12b2b" class=""><strong>10. Typed API Responses</strong></h3><p id="2a7536a1-10ea-8093-9b43-f8bd52067e4c" class="">HttpClient supports generic types, ensuring <strong>type safety</strong>:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-800d-ab17-da94a917fb8c" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.http.get&lt;User[]&gt;(this.baseUrl);</code></pre><p id="2a7536a1-10ea-80dc-bda4-ff68e96f6349" class="">Now <code>users</code> will automatically be inferred as <code>User[]</code>.</p><hr id="2a7536a1-10ea-80b7-9f6f-e88ee68236d1"/><h3 id="2a7536a1-10ea-8055-a958-d201aca34a9e" class=""><strong>11. Using Environment Files</strong></h3><p id="2a7536a1-10ea-8004-acf3-e5a58099ebe4" class="">Store base URLs or API keys in Angular environments:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8006-9533-f71939c18c52" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">// environment.ts
+export const environment = {
+  apiUrl: &#x27;https://api.example.com&#x27;
+};</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8096-8748-e4c8d627633a" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.http.get(`${environment.apiUrl}/users`);</code></pre><hr id="2a7536a1-10ea-8036-88cb-edba7fb3c4eb"/><h3 id="2a7536a1-10ea-80c5-b604-d09d64f1bd8e" class=""><strong>12. Practical Example – CRUD with Error Handling</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a7-bf6e-e17e0b4e3fc4" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">getUsers(): Observable&lt;User[]&gt; {
+  return this.http.get&lt;User[]&gt;(`${environment.apiUrl}/users`).pipe(
+    catchError(err =&gt; {
+      console.error(&#x27;Error fetching users:&#x27;, err);
+      return throwError(() =&gt; err);
+    })
+  );
+}
+
+createUser(user: User): Observable&lt;User&gt; {
+  return this.http.post&lt;User&gt;(`${environment.apiUrl}/users`, user);
+}</code></pre><hr id="2a7536a1-10ea-800c-9424-c943afab9ed6"/><h3 id="2a7536a1-10ea-80d1-b55a-faa930e26df7" class=""><strong>13. Industry Tips</strong></h3><p id="2a7536a1-10ea-80cc-878d-e1d3c0b34b31" class="">✅ Always use <strong>services</strong> for API communication (never in components).</p><p id="2a7536a1-10ea-8029-8914-c97bd1c417fc" class="">✅ Prefer <strong>async pipe</strong> to avoid manual <code>subscribe/unsubscribe</code>.</p><p id="2a7536a1-10ea-802c-bf97-ebb369976dd9" class="">✅ Use <strong>interceptors</strong> for authentication, logging, and global error handling.</p><p id="2a7536a1-10ea-8032-a4ea-f88ed610ebe9" class="">✅ Keep <strong>base URLs</strong> in environment files.</p><p id="2a7536a1-10ea-8009-aa14-e8df117a60f8" class="">✅ Use <strong>RxJS operators</strong> (<code>map</code>, <code>tap</code>, <code>catchError</code>, <code>switchMap</code>, etc.) for clean reactive flows.</p><hr id="2a7536a1-10ea-804d-afc6-c2c3777cfe41"/></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

@@ -1,0 +1,788 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Chapter 5 - Services and Dependency Injection</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2a7536a1-10ea-8059-bb70-ed00038e20f5" class="page sans"><header><h1 class="page-title">Chapter 5 - Services and Dependency Injection</h1><p class="page-description"></p></header><div class="page-body"><hr id="2a7536a1-10ea-80fa-8ca2-d7a62002cf79"/><h3 id="2a7536a1-10ea-804e-91fb-fddbfc21cb9e" class=""><strong>1. What is a Service?</strong></h3><p id="2a7536a1-10ea-80e7-9539-c2c0296cc2cd" class="">A <strong>service</strong> in Angular is a <strong>singleton class</strong> that encapsulates reusable business logic or data.</p><p id="2a7536a1-10ea-8047-8e38-f533e3d45926" class="">It’s mainly used to:</p><ul id="2a7536a1-10ea-80d2-8f71-c64ba35f466d" class="bulleted-list"><li style="list-style-type:disc">Share data between components</li></ul><ul id="2a7536a1-10ea-8016-bf21-f0828bf62d4a" class="bulleted-list"><li style="list-style-type:disc">Handle HTTP requests</li></ul><ul id="2a7536a1-10ea-8045-9159-e829a6e8b135" class="bulleted-list"><li style="list-style-type:disc">Implement business logic</li></ul><ul id="2a7536a1-10ea-80f3-abf4-cfddc5205a4d" class="bulleted-list"><li style="list-style-type:disc">Manage state or caching</li></ul><ul id="2a7536a1-10ea-8015-8e84-df80d3e1b82b" class="bulleted-list"><li style="list-style-type:disc">Wrap reusable utility functions</li></ul><p id="2a7536a1-10ea-8051-9a10-fafb14889cd4" class="">💬 <strong>In short:</strong> Services = Logic layer outside of components.</p><hr id="2a7536a1-10ea-80dd-9d20-f7ba254e1ced"/><h3 id="2a7536a1-10ea-800d-9691-d7d2bbe70c20" class=""><strong>2. Why Use Services?</strong></h3><p id="2a7536a1-10ea-80f5-a5c4-c16cb0acf7ea" class="">Components should focus on <strong>UI and user interaction</strong>, not data handling or business logic.</p><p id="2a7536a1-10ea-800b-9e02-fe7853fa7aa6" class="">Example: Instead of fetching data directly in a component:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80ee-b392-ee2e67853206" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.http.get(&#x27;/api/users&#x27;);</code></pre><p id="2a7536a1-10ea-804c-8510-c3f20e4f5b88" class="">You create a <strong>UserService</strong> that handles it:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8035-a187-ddd4a07a24e9" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">getUsers() {
+  return this.http.get(&#x27;/api/users&#x27;);
+}</code></pre><p id="2a7536a1-10ea-80dd-9b45-cbe13ad86349" class="">Then the component just <em>calls</em> the service:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a5-80f8-ea93cd9f3b5b" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.userService.getUsers().subscribe({
+	next: (response =&gt; {
+		this.users = response;
+	}	
+);</code></pre><p id="2a7536a1-10ea-80c8-a336-f68c0bfd8abc" class="">✅ Cleaner code</p><p id="2a7536a1-10ea-80f0-b190-f85e41135b16" class="">✅ Easier testing</p><p id="2a7536a1-10ea-80b3-9f57-eacfc3eccbb4" class="">✅ Better separation of concerns</p><hr id="2a7536a1-10ea-805b-8925-d844eea2061a"/><h3 id="2a7536a1-10ea-801c-a575-cccd72565aff" class=""><strong>3. Creating a Service</strong></h3><p id="2a7536a1-10ea-804f-8906-c24d9b45e117" class="">Using Angular CLI:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8005-9ca0-d8bd2507340f" class="code code-wrap"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">ng generate service user
+# or shorthand
+ng g s user</code></pre><p id="2a7536a1-10ea-8016-9e79-c301f90f67bd" class="">This generates <code>user.service.ts</code> with:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a7-a56a-dca35126cbb8" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { Injectable } from &#x27;@angular/core&#x27;;
+
+@Injectable({
+  providedIn: &#x27;root&#x27;
+})
+export class UserService {
+  constructor() { }
+}</code></pre><hr id="2a7536a1-10ea-80a6-9be6-d13307f0d06f"/><h3 id="2a7536a1-10ea-805e-bbac-c5c217373442" class=""><strong>4. The @Injectable() Decorator</strong></h3><p id="2a7536a1-10ea-80bd-9204-f59d38802f27" class=""><code>@Injectable()</code> marks a class as a <strong>service</strong> that can be injected by Angular’s <strong>Dependency Injection system</strong>.</p><ul id="2a7536a1-10ea-8011-a7c0-ded556837c9e" class="bulleted-list"><li style="list-style-type:disc">The <code>providedIn: &#x27;root&#x27;</code> syntax registers it in the <strong>root injector</strong>, meaning:<ul id="2a7536a1-10ea-80c7-af20-eb575ff5d6e7" class="bulleted-list"><li style="list-style-type:circle">A <strong>single instance</strong> is shared app-wide.</li></ul><ul id="2a7536a1-10ea-80de-9495-fe3b799721be" class="bulleted-list"><li style="list-style-type:circle">No need to manually add it in <code>providers[]</code> array in <code>app.module.ts</code>.</li></ul></li></ul><p id="2a7536a1-10ea-809d-82b8-dbddd1f1f22c" class="">Other options:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8014-9e0e-cde3bd26965c" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@Injectable({
+  providedIn: &#x27;any&#x27;   // creates one instance per lazy-loaded module
+})
+@Injectable({
+  providedIn: &#x27;platform&#x27; // instance shared across multiple Angular apps on same page
+})</code></pre><hr id="2a7536a1-10ea-80a7-bdcb-f7e87f9d852a"/><h3 id="2a7536a1-10ea-8090-9dcc-f829bc2171b8" class=""><strong>5. Using a Service in a Component</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-805e-83e9-e5399bdf1578" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { Component, OnInit } from &#x27;@angular/core&#x27;;
+import { UserService } from &#x27;./user.service&#x27;;
+
+@Component({
+  selector: &#x27;app-user&#x27;,
+  templateUrl: &#x27;./user.component.html&#x27;
+})
+export class UserComponent implements OnInit {
+
+  users: any[] = [];
+
+  // inject service via constructor
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
+    this.userService.getUsers().subscribe((data) =&gt; this.users = data);
+  }
+}</code></pre><hr id="2a7536a1-10ea-809b-9245-cfa27227e4b0"/><h3 id="2a7536a1-10ea-8024-8b12-d2c58db99a82" class=""><strong>6. How Dependency Injection Works</strong></h3><p id="2a7536a1-10ea-80a5-9526-ef727973c07c" class=""><strong>Dependency Injection (DI)</strong> is a design pattern where an object’s dependencies are <strong>provided externally</strong> instead of being created inside it.</p><p id="2a7536a1-10ea-802d-9d4f-e980823096e2" class="">Angular uses a <strong>hierarchical injector system</strong>:</p><ul id="2a7536a1-10ea-8090-909c-c7ab3fb87f81" class="bulleted-list"><li style="list-style-type:disc">Each module, component, or directive can have its own <strong>injector</strong>.</li></ul><ul id="2a7536a1-10ea-8010-8261-fad14072ca32" class="bulleted-list"><li style="list-style-type:disc">If a dependency isn’t found in a local injector, Angular looks <strong>up the tree</strong> to find it (usually at root).</li></ul><p id="2a7536a1-10ea-80f4-9687-e3afac1d241a" class="">Example hierarchy:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-806f-9141-f2b5dba2c92d" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">AppModule Injector
+│
+├── UserComponent Injector
+│    └── UserService
+└── ProductComponent Injector
+     └── ProductService
+</code></pre><hr id="2a7536a1-10ea-809c-89a8-c13f7142b931"/><h3 id="2a7536a1-10ea-80cf-8731-d517687ea165" class=""><strong>7. Providing Services</strong></h3><p id="2a7536a1-10ea-8020-a582-e499c89ac1c4" class="">Three main ways to <strong>register</strong> a service:</p><h3 id="2a7536a1-10ea-8067-b07e-f435c17cb0bf" class="">a) Provided in root (Recommended)</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8013-a57b-ef191359fe93" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@Injectable({ providedIn: &#x27;root&#x27; })</code></pre><h3 id="2a7536a1-10ea-806b-829b-e052a76aebab" class="">b) Provided in module</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8014-b3e3-d6aca499bff8" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@NgModule({
+  providers: [UserService]
+})</code></pre><h3 id="2a7536a1-10ea-8061-93e9-cbe5874bb96b" class="">c) Provided in component</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8084-8b5d-ed807dc73193" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@Component({
+  providers: [UserService]
+})</code></pre><blockquote id="2a7536a1-10ea-8061-8994-f01ce64c88c7" class="">⚠️ Note: Providing in a component creates a new instance of the service for that component only — not shared globally.</blockquote><hr id="2a7536a1-10ea-8043-a931-f08158574b8d"/><h3 id="2a7536a1-10ea-80ee-837e-e91def22f389" class=""><strong>8. Example: Shared Service Between Components</strong></h3><p id="2a7536a1-10ea-80da-9f05-d674d9b094a0" class=""><strong>user.service.ts</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-809e-af0d-f491fc848110" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@Injectable({ providedIn: &#x27;root&#x27; })
+export class UserService {
+  private users: string[] = [&#x27;Adithya&#x27;, &#x27;Raj&#x27;, &#x27;Priya&#x27;];
+
+  getUsers() {
+    return this.users;
+  }
+
+  addUser(name: string) {
+    this.users.push(name);
+  }
+}</code></pre><p id="2a7536a1-10ea-806b-92fe-d22adce7e8ef" class=""><strong>component-a.ts</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8030-8349-e18b803d46cc" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">constructor(private userService: UserService) {}
+addUser() { this.userService.addUser(&#x27;Vikram&#x27;); }</code></pre><p id="2a7536a1-10ea-80ee-a809-d32125236875" class=""><strong>component-b.ts</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80e2-ab63-c5278419319a" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">constructor(private userService: UserService) {}
+ngOnInit() { console.log(this.userService.getUsers()); }
+</code></pre><p id="2a7536a1-10ea-8049-af20-f459adf0845f" class="">✅ <strong>Result:</strong> Both components share the same instance of <code>UserService</code>, so data is synced.</p><hr id="2a7536a1-10ea-805d-a1cf-e0a333a28177"/><h3 id="2a7536a1-10ea-8057-a80c-c4be2827ec62" class=""><strong>9. Injecting Built-in Services</strong></h3><p id="2a7536a1-10ea-8007-8d6e-e09ce2a5f8c5" class="">Angular provides many built-in services — you can inject them easily:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-807f-8269-cae771dfefda" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">constructor(private router: Router, private http: HttpClient) {}</code></pre><hr id="2a7536a1-10ea-80fd-8631-ec54a2ae4a83"/><h3 id="2a7536a1-10ea-8094-8120-d0ee482af5e9" class=""><strong>10. Using </strong><code><strong>@Optional()</strong></code><strong>, </strong><code><strong>@Self()</strong></code><strong>, </strong><code><strong>@SkipSelf()</strong></code><strong>, </strong><code><strong>@Host()</strong></code><strong> Decorators</strong></h3><p id="2a7536a1-10ea-801b-8192-e31ab2f85f0c" class="">These decorators help <strong>control how DI resolves dependencies</strong>.</p><table id="2a7536a1-10ea-806e-92f1-dd692147dffb" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-80e9-b302-f936d5356cd4"><th id="kBrt" class="simple-table-header-color simple-table-header">Decorator</th><th id="otcD" class="simple-table-header-color simple-table-header">Description</th></tr></thead><tbody><tr id="2a7536a1-10ea-80f9-8b28-f48de50a8d4c"><td id="kBrt" class=""><code>@Optional()</code></td><td id="otcD" class="">If service not found, Angular injects <code>null</code> instead of throwing error</td></tr><tr id="2a7536a1-10ea-80b0-8f32-cf2ce76c5080"><td id="kBrt" class=""><code>@Self()</code></td><td id="otcD" class="">Looks for dependency only in the local injector</td></tr><tr id="2a7536a1-10ea-8064-9851-c9840a4cea39"><td id="kBrt" class=""><code>@SkipSelf()</code></td><td id="otcD" class="">Skips the current injector, looks in parent</td></tr><tr id="2a7536a1-10ea-8081-a243-ddf8e42bb5c6"><td id="kBrt" class=""><code>@Host()</code></td><td id="otcD" class="">Looks in current or host component’s injector</td></tr></tbody></table><p id="2a7536a1-10ea-80f2-ad58-ec0ae15877da" class="">Example:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a9-beb5-c21b975982ca" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">constructor(@Optional() private logger?: LoggerService) {}</code></pre><hr id="2a7536a1-10ea-80bc-8c5f-ec69ab7058dc"/><h3 id="2a7536a1-10ea-8049-9f90-cf9957695aa7" class=""><strong>11. Value Providers (Custom Injection Tokens)</strong></h3><p id="2a7536a1-10ea-8049-996f-c00562893458" class="">When you want to inject <strong>values</strong>, not services.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80d3-bc71-e73f83d71453" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { InjectionToken } from &#x27;@angular/core&#x27;;
+
+export const API_URL = new InjectionToken&lt;string&gt;(&#x27;API_URL&#x27;);
+
+@NgModule({
+  providers: [{ provide: API_URL, useValue: &#x27;https://api.example.com&#x27; }]
+})
+export class AppModule {}</code></pre><p id="2a7536a1-10ea-80bd-b0d6-cd62cf482650" class="">Then inject:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8094-a0dc-fb2b2209c229" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">constructor(@Inject(API_URL) private apiUrl: string) {
+  console.log(this.apiUrl);
+}</code></pre><hr id="2a7536a1-10ea-80e1-bf26-efb2b87a6c11"/><h3 id="2a7536a1-10ea-80e6-a0f4-c0ee0b550d6a" class=""><strong>12. Factory Providers</strong></h3><p id="2a7536a1-10ea-80bf-8034-f915b8c5ea06" class="">Used when you need <strong>dynamic creation</strong> logic for dependencies.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-809f-801a-e23360a7f292" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">providers: [
+  {
+    provide: LoggerService,
+    useFactory: () =&gt; environment.production ? new ProdLogger() : new DevLogger()
+  }
+]</code></pre><hr id="2a7536a1-10ea-80d7-89b6-c3dc1a9edf6c"/><h3 id="2a7536a1-10ea-807a-b3d6-c3f01bad1886" class=""><strong>13. Multi Providers</strong></h3><p id="2a7536a1-10ea-80bb-9583-e4ea39ea9adc" class="">You can provide <strong>multiple values</strong> for the same token.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a9-a7b3-d0991b548159" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export const LOGGER = new InjectionToken&lt;string[]&gt;(&#x27;LOGGER&#x27;);
+
+@NgModule({
+  providers: [
+    { provide: LOGGER, useValue: &#x27;ConsoleLogger&#x27;, multi: true },
+    { provide: LOGGER, useValue: &#x27;FileLogger&#x27;, multi: true }
+  ]
+})</code></pre><p id="2a7536a1-10ea-80a0-a41b-c60c17ccd8b4" class="">Result when injected → <code>[ &#x27;ConsoleLogger&#x27;, &#x27;FileLogger&#x27; ]</code></p><hr id="2a7536a1-10ea-8005-8e34-cb6141fb4f14"/><h3 id="2a7536a1-10ea-807e-8876-dfae8260720d" class="">✅ <strong>Key Takeaways</strong></h3><ul id="2a7536a1-10ea-8063-899c-fc0ca34c0351" class="bulleted-list"><li style="list-style-type:disc">Services encapsulate <strong>shared business logic</strong>.</li></ul><ul id="2a7536a1-10ea-804c-94f8-c17ef52e9ce1" class="bulleted-list"><li style="list-style-type:disc"><code>@Injectable()</code> makes a class available for <strong>dependency injection</strong>.</li></ul><ul id="2a7536a1-10ea-8006-ad46-c588c494597f" class="bulleted-list"><li style="list-style-type:disc">Angular uses a <strong>hierarchical injector system</strong>.</li></ul><ul id="2a7536a1-10ea-80e7-9531-f290e7de02da" class="bulleted-list"><li style="list-style-type:disc"><code>providedIn: &#x27;root&#x27;</code> is the modern and efficient way to register services.</li></ul><ul id="2a7536a1-10ea-80ac-8623-ff8e815ee409" class="bulleted-list"><li style="list-style-type:disc"><code>@Optional()</code>, <code>@Self()</code>, <code>@SkipSelf()</code>, <code>@Host()</code> fine-tune DI resolution.</li></ul><ul id="2a7536a1-10ea-80e2-86d5-eaad92dba4c9" class="bulleted-list"><li style="list-style-type:disc">You can inject both <strong>custom</strong> and <strong>built-in</strong> services easily.</li></ul><hr id="2a7536a1-10ea-8023-bc85-ec3c947bfad2"/></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

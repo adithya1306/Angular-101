@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angular Notes - Chapter Index</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"> 
+    
+    <style>
+
+            /* Global Reset and Font */
+        :root {
+            --primary-color: #DD0031; /* Angular Red */
+            --secondary-color: #3f51b5; /* A complementary blue/indigo */
+            --text-color: #333;
+            --bg-color: #f8f9fa;
+            --card-bg: #fff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif; /* Modern, clean font */
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        /* Container and Header */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700; /* Bold for impact */
+        }
+
+        .header p {
+            font-size: 1.1em;
+            color: #6c757d;
+        }
+
+        /* Button Grid Layout */
+        .button-grid {
+            display: grid;
+            /* Create a responsive grid: 3 columns on large screens, 2 on medium, 1 on small */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        /* Chapter Button Style (Anchor Tag) */
+        .chapter-button {
+            /* Make the entire link look like a card/button */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 30px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            text-decoration: none; /* Remove underline */
+            color: var(--text-color);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            border-left: 5px solid var(--primary-color); /* Highlight bar */
+        }
+
+        .chapter-button:hover {
+            transform: translateY(-5px); /* Lift effect on hover */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+            background-color: #fff3f3; /* Subtle background change */
+        }
+
+        .chapter-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            opacity: 0.85;
+        }
+
+        .chapter-title {
+            font-size: 1.2em;
+            font-weight: 600; /* Semi-bold for title */
+            color: var(--secondary-color);
+            text-align: left;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Angular Study Hub</h1>
+            <p>Select a chapter to dive into your notes.</p>
+        </header>
+
+        <div class="button-grid">
+            <a href="chapter1.html" class="chapter-button">
+                <span class="chapter-number">01</span>
+                <span class="chapter-title">Angular Fundamentals - Folder Structure, Data Binding and Directives</span>
+            </a>
+
+            <a href="chapter2.html" class="chapter-button">
+                <span class="chapter-number">02</span>
+                <span class="chapter-title">TypeScript in Angular</span>
+            </a>
+
+            <a href="chapter3.html" class="chapter-button">
+                <span class="chapter-number">03</span>
+                <span class="chapter-title">Components 101</span>
+            </a>
+
+            <a href="chapter4.html" class="chapter-button">
+                <span class="chapter-number">04</span>
+                <span class="chapter-title">Directives & Pipes</span>
+            </a>
+
+            <a href="chapter5.html" class="chapter-button">
+                <span class="chapter-number">05</span>
+                <span class="chapter-title">Services & Dependency Injection</span>
+            </a>
+
+            <a href="chapter6.html" class="chapter-button">
+                <span class="chapter-number">06</span>
+                <span class="chapter-title">HTTP Requests & API Communication</span>
+            </a>
+
+            <a href="chapter7.html" class="chapter-button">
+                <span class="chapter-number">07</span>
+                <span class="chapter-title">RxJS 101</span>
+            </a>
+
+            <a href="chapter8.html" class="chapter-button">
+                <span class="chapter-number">08</span>
+                <span class="chapter-title">Routing, Lazy Loading & Route Guards</span>
+            </a>
+
+            <a href="chapter9.html" class="chapter-button">
+                <span class="chapter-number">09</span>
+                <span class="chapter-title">Forms 101</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,847 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Chapter 8 - Routing, Lazy Loading &amp; Route Guards</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2a7536a1-10ea-8097-b945-dbfc1595096c" class="page sans"><header><h1 class="page-title">Chapter 8 - <strong>Routing, Lazy Loading &amp; Route Guards</strong></h1><p class="page-description"></p></header><div class="page-body"><hr id="2a7536a1-10ea-80af-add9-ea53f6637078"/><h3 id="2a7536a1-10ea-80c0-b891-e1a9aec97de2" class=""><strong>1. Introduction to Angular Routing</strong></h3><p id="2a7536a1-10ea-80be-a087-f201a2ac22d5" class="">Routing in Angular allows navigation between different <strong>views or components</strong> without reloading the entire page — a <strong>Single Page Application (SPA)</strong> pattern.</p><p id="2a7536a1-10ea-8090-ad04-ded81969373c" class="">The <strong>Angular Router</strong>:</p><ul id="2a7536a1-10ea-8078-98cd-cee81b6bea71" class="bulleted-list"><li style="list-style-type:disc">Maps URLs to components</li></ul><ul id="2a7536a1-10ea-808a-b180-cbc997a6b215" class="bulleted-list"><li style="list-style-type:disc">Handles navigation</li></ul><ul id="2a7536a1-10ea-80f5-ac8b-d588af032895" class="bulleted-list"><li style="list-style-type:disc">Supports lazy loading</li></ul><ul id="2a7536a1-10ea-80b5-a0ab-ebf823107735" class="bulleted-list"><li style="list-style-type:disc">Protects routes (Auth Guards)</li></ul><ul id="2a7536a1-10ea-80d2-a9ca-ce6f9dc1b053" class="bulleted-list"><li style="list-style-type:disc">Passes route parameters and query params</li></ul><hr id="2a7536a1-10ea-8084-9849-eab593b13835"/><h3 id="2a7536a1-10ea-807a-9791-cd633078c172" class=""><strong>2. Setting Up Routing</strong></h3><p id="2a7536a1-10ea-801e-8126-fddbda8901fb" class="">When creating a project:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a8-bdcf-c50fd017692a" class="code code-wrap"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">ng new my-app --routing
+</code></pre><p id="2a7536a1-10ea-8049-ac16-cb918ee1de58" class="">This automatically creates <code>app-routing.module.ts</code>.</p><p id="2a7536a1-10ea-8053-aeb4-d5b05245c0fd" class="">If not created, you can add routing manually.</p><hr id="2a7536a1-10ea-8048-97ad-e85ebd276cc9"/><h3 id="2a7536a1-10ea-80ed-a397-eb8a720d8409" class=""><strong>3. Basic Routing Example</strong></h3><h3 id="2a7536a1-10ea-8033-8e31-c8c160aff6ae" class=""><strong>app-routing.module.ts</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8093-80ce-c8274cc42d49" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { NgModule } from &#x27;@angular/core&#x27;;
+import { RouterModule, Routes } from &#x27;@angular/router&#x27;;
+import { HomeComponent } from &#x27;./home/home.component&#x27;;
+import { AboutComponent } from &#x27;./about/about.component&#x27;;
+
+const routes: Routes = [
+  { path: &#x27;&#x27;, component: HomeComponent },
+  { path: &#x27;about&#x27;, component: AboutComponent },
+  { path: &#x27;**&#x27;, redirectTo: &#x27;&#x27; } // wildcard route for 404s
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
+</code></pre><h3 id="2a7536a1-10ea-805b-8cd2-d584064e1695" class=""><strong>app.component.html</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80fd-a1dc-c17d1afd1dab" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;nav&gt;
+  &lt;a routerLink=&quot;/&quot;&gt;Home&lt;/a&gt;
+  &lt;a routerLink=&quot;/about&quot;&gt;About&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;router-outlet&gt;&lt;/router-outlet&gt;
+</code></pre><p id="2a7536a1-10ea-80cd-bea2-d83da30ee38d" class="">✅ <code>routerLink</code> — Angular’s version of anchor tag</p><p id="2a7536a1-10ea-80bb-8a03-d5820da72197" class="">✅ <code>&lt;router-outlet&gt;</code> — Placeholder where routed components appear</p><hr id="2a7536a1-10ea-80eb-82a5-f059bd925136"/><h3 id="2a7536a1-10ea-8073-8338-f336c8d7ee9b" class=""><strong>4. Route Parameters</strong></h3><p id="2a7536a1-10ea-80ca-a6a4-f5418b2ee9ba" class="">Use <code>:id</code> to pass parameters.</p><h3 id="2a7536a1-10ea-805a-8b8f-ef1f9ea753e7" class=""><strong>app-routing.module.ts</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-803d-8448-e39fe6cf8422" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">{ path: &#x27;users/:id&#x27;, component: UserDetailComponent }
+</code></pre><h3 id="2a7536a1-10ea-8019-a0f0-f482b95cf5c8" class=""><strong>UserDetailComponent.ts</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80fd-9b22-ef41ad6ee4cc" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { ActivatedRoute } from &#x27;@angular/router&#x27;;
+
+constructor(private route: ActivatedRoute) {}
+
+ngOnInit() {
+  const id = this.route.snapshot.paramMap.get(&#x27;id&#x27;);
+  console.log(&#x27;User ID:&#x27;, id);
+}
+</code></pre><h3 id="2a7536a1-10ea-8011-b427-f9132905304e" class=""><strong>Dynamic Link Example</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80f0-a45f-f6d8c5d6ca07" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;a [routerLink]=&quot;[&#x27;/users&#x27;, user.id]&quot;&gt;View&lt;/a&gt;
+</code></pre><hr id="2a7536a1-10ea-80e6-be73-e389ef2899ed"/><h3 id="2a7536a1-10ea-80d0-9746-e9b576f87150" class=""><strong>5. Query Parameters</strong></h3><h3 id="2a7536a1-10ea-80f9-a5e9-c0a188e4dfd9" class=""><strong>Example:</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80dc-88a8-da35294de135" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;a [routerLink]=&quot;[&#x27;/products&#x27;]&quot; [queryParams]=&quot;{ sort: &#x27;price&#x27;, order: &#x27;asc&#x27; }&quot;&gt;
+  Sort Products
+&lt;/a&gt;
+</code></pre><h3 id="2a7536a1-10ea-80f4-a95a-dc071029fb40" class=""><strong>Reading Query Params:</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-809a-a7d1-fee249f06502" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.route.queryParamMap.subscribe(params =&gt; {
+  console.log(params.get(&#x27;sort&#x27;));
+});
+</code></pre><hr id="2a7536a1-10ea-8065-b468-fa9bd6b43038"/><h3 id="2a7536a1-10ea-80d9-8ec6-c2bb0b146f5f" class=""><strong>6. Child Routes (Nested Routing)</strong></h3><p id="2a7536a1-10ea-8028-a9d3-e89ce73631cb" class="">Useful for <strong>layouts</strong> or <strong>sub-sections</strong>.</p><h3 id="2a7536a1-10ea-80eb-8416-ebfbcb7dfe97" class=""><strong>routes</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8097-a532-ca9d0237bcd1" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">{
+  path: &#x27;dashboard&#x27;,
+  component: DashboardComponent,
+  children: [
+    { path: &#x27;overview&#x27;, component: OverviewComponent },
+    { path: &#x27;reports&#x27;, component: ReportsComponent }
+  ]
+}
+</code></pre><h3 id="2a7536a1-10ea-8005-b00a-f05143531d57" class=""><strong>dashboard.component.html</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8036-8df6-e034c72213a7" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">&lt;nav&gt;
+  &lt;a routerLink=&quot;overview&quot;&gt;Overview&lt;/a&gt;
+  &lt;a routerLink=&quot;reports&quot;&gt;Reports&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;router-outlet&gt;&lt;/router-outlet&gt;
+</code></pre><hr id="2a7536a1-10ea-80f9-9b3a-ee1075377380"/><h3 id="2a7536a1-10ea-809f-8f94-ea9eafe21d56" class=""><strong>7. Programmatic Navigation</strong></h3><p id="2a7536a1-10ea-8060-8a4d-d65b4c14fa77" class="">You can navigate from code using the <code>Router</code> service.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8059-8a8d-f9e65c6e7445" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { Router } from &#x27;@angular/router&#x27;;
+
+constructor(private router: Router) {}
+
+goToProfile(id: number) {
+  this.router.navigate([&#x27;/profile&#x27;, id]);
+}
+
+goWithQuery() {
+  this.router.navigate([&#x27;/products&#x27;], { queryParams: { sort: &#x27;price&#x27; } });
+}
+</code></pre><hr id="2a7536a1-10ea-8006-a5d0-e087b6de0ecf"/><h3 id="2a7536a1-10ea-80ca-94fe-dd45dc07962e" class=""><strong>8. Lazy Loading (Performance Optimization)</strong></h3><p id="2a7536a1-10ea-808f-a1c5-fbb4097822a5" class="">Lazy loading helps load <strong>modules only when needed</strong>, reducing initial bundle size and improving app startup time.</p><h3 id="2a7536a1-10ea-8032-a0ef-ff7c11a60db2" class=""><strong>Step 1: Create a Feature Module</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80b9-9309-e15275fc8f43" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">ng g module admin --route admin --module app.module
+</code></pre><p id="2a7536a1-10ea-80e4-8c7b-ddb8514bf91e" class="">This automatically sets up lazy loading in routes.</p><h3 id="2a7536a1-10ea-80f6-8092-f6e1cb36a3c9" class=""><strong>Step 2: app-routing.module.ts</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8041-89e2-e9786112234e" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">const routes: Routes = [
+  { path: &#x27;&#x27;, component: HomeComponent },
+  {
+    path: &#x27;admin&#x27;,
+    loadChildren: () =&gt;
+      import(&#x27;./admin/admin.module&#x27;).then(m =&gt; m.AdminModule)
+  }
+];
+</code></pre><h3 id="2a7536a1-10ea-8021-a17c-cfe2ed008ae4" class=""><strong>Step 3: admin-routing.module.ts</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-805e-8187-f1b7303b1024" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">const routes: Routes = [
+  { path: &#x27;&#x27;, component: AdminDashboardComponent },
+  { path: &#x27;users&#x27;, component: AdminUsersComponent }
+];
+</code></pre><p id="2a7536a1-10ea-80d5-834b-e92f40870103" class="">✅ The <code>admin</code> module and its components load <strong>only when </strong><code><strong>/admin</strong></code> is accessed.</p><hr id="2a7536a1-10ea-80f9-8cf6-fce765bcb259"/><h3 id="2a7536a1-10ea-8092-b10d-eeefcb854676" class=""><strong>9. Preloading Strategies</strong></h3><p id="2a7536a1-10ea-8031-a456-dce2df41d9ae" class="">You can preload lazy-loaded modules <strong>after the app starts</strong>, to balance speed and performance.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8072-8954-c8a6f454aadd" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })]
+</code></pre><p id="2a7536a1-10ea-800c-9dd8-f6b520a4b85d" class="">This preloads all lazy modules <strong>in the background</strong>.</p><hr id="2a7536a1-10ea-8094-8bfa-fe6e922c5a9d"/><h3 id="2a7536a1-10ea-80f0-9ed8-d6a2a6f2da9a" class=""><strong>10. Route Guards</strong></h3><p id="2a7536a1-10ea-809a-8244-ebce4a25d92a" class="">Guards protect routes or control navigation.</p><p id="2a7536a1-10ea-80dd-858f-d3b65cac0b7f" class="">They return:</p><ul id="2a7536a1-10ea-80f9-86e5-f9b235097329" class="bulleted-list"><li style="list-style-type:disc"><code>true</code> → allow navigation</li></ul><ul id="2a7536a1-10ea-80dc-bfd7-de3e4c25effe" class="bulleted-list"><li style="list-style-type:disc"><code>false</code> → block navigation</li></ul><ul id="2a7536a1-10ea-8022-ab8c-cd873514f0ee" class="bulleted-list"><li style="list-style-type:disc"><code>UrlTree</code> → redirect</li></ul><h3 id="2a7536a1-10ea-8075-b97c-c6292e05e8bd" class="">Types:</h3><table id="2a7536a1-10ea-807f-846f-d241130374c4" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-8037-8692-d32be6eb7ca9"><th id="M^R&lt;" class="simple-table-header-color simple-table-header">Guard Type</th><th id="TmCq" class="simple-table-header-color simple-table-header">Interface</th><th id="|pb}" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="2a7536a1-10ea-80d7-acb7-f61b7ad3821f"><td id="M^R&lt;" class=""><code>CanActivate</code></td><td id="TmCq" class=""><code>CanActivate</code></td><td id="|pb}" class="">Control access to route</td></tr><tr id="2a7536a1-10ea-806c-a926-edaf99c7e942"><td id="M^R&lt;" class=""><code>CanActivateChild</code></td><td id="TmCq" class=""><code>CanActivateChild</code></td><td id="|pb}" class="">Protect child routes</td></tr><tr id="2a7536a1-10ea-80a3-bac3-d994846a601e"><td id="M^R&lt;" class=""><code>CanDeactivate</code></td><td id="TmCq" class=""><code>CanDeactivate&lt;T&gt;</code></td><td id="|pb}" class="">Warn before leaving a route</td></tr><tr id="2a7536a1-10ea-80d1-9d1c-c9b9aa0a004b"><td id="M^R&lt;" class=""><code>Resolve</code></td><td id="TmCq" class=""><code>Resolve&lt;T&gt;</code></td><td id="|pb}" class="">Fetch data before route activates</td></tr><tr id="2a7536a1-10ea-805d-92d9-f92070137ec1"><td id="M^R&lt;" class=""><code>CanLoad</code></td><td id="TmCq" class=""><code>CanLoad</code></td><td id="|pb}" class="">Prevent loading lazy modules</td></tr><tr id="2a7536a1-10ea-809f-9875-e91391de813e"><td id="M^R&lt;" class=""><code>CanMatch</code></td><td id="TmCq" class=""><code>CanMatch</code></td><td id="|pb}" class="">Conditionally match routes (Angular 15+)</td></tr></tbody></table><hr id="2a7536a1-10ea-80e5-98c7-fcb8b5464607"/><h3 id="2a7536a1-10ea-80da-9f59-c6485a248bd4" class=""><strong>11. Example: Auth Guard (CanActivate)</strong></h3><h3 id="2a7536a1-10ea-80b1-a967-f6028e9b652d" class=""><strong>auth.guard.ts</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8065-b7eb-ec80a51ebe99" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">import { Injectable } from &#x27;@angular/core&#x27;;
+import { CanActivate, Router } from &#x27;@angular/router&#x27;;
+
+@Injectable({ providedIn: &#x27;root&#x27; })
+export class AuthGuard implements CanActivate {
+  constructor(private router: Router) {}
+
+  canActivate(): boolean {
+    const token = localStorage.getItem(&#x27;token&#x27;);
+    if (!token) {
+      this.router.navigate([&#x27;/login&#x27;]);
+      return false;
+    }
+    return true;
+  }
+}
+</code></pre><h3 id="2a7536a1-10ea-80f1-b4fb-daf7af7682ab" class=""><strong>app-routing.module.ts</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8047-b1da-ceb8d7834b12" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">{ path: &#x27;dashboard&#x27;, component: DashboardComponent, canActivate: [AuthGuard] }
+</code></pre><hr id="2a7536a1-10ea-8001-a89a-c041bda3b25c"/><h3 id="2a7536a1-10ea-8016-ae41-d40376142c6c" class=""><strong>12. Example: Deactivation Guard (CanDeactivate)</strong></h3><p id="2a7536a1-10ea-800f-8eba-ebc292b54293" class="">Prompt users before leaving a page with unsaved changes.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-808e-8ff6-ed3b59839d0a" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export interface CanComponentDeactivate {
+  canDeactivate: () =&gt; boolean | Observable&lt;boolean&gt;;
+}
+
+@Injectable({ providedIn: &#x27;root&#x27; })
+export class CanDeactivateGuard implements CanDeactivate&lt;CanComponentDeactivate&gt; {
+  canDeactivate(component: CanComponentDeactivate) {
+    return component.canDeactivate ? component.canDeactivate() : true;
+  }
+}
+</code></pre><p id="2a7536a1-10ea-8002-a595-f7715290accc" class=""><strong>Usage in Component:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80d2-89cd-c0f93bb242fc" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">canDeactivate(): boolean {
+  return confirm(&#x27;Do you really want to leave? Unsaved changes will be lost.&#x27;);
+}
+</code></pre><p id="2a7536a1-10ea-8010-a7b6-fe1a080555b4" class=""><strong>In Routes:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80ba-b392-d6951e003275" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">{ path: &#x27;edit&#x27;, component: EditComponent, canDeactivate: [CanDeactivateGuard] }
+</code></pre><hr id="2a7536a1-10ea-80c7-99b2-d9e93414c9a5"/><h3 id="2a7536a1-10ea-80af-9cb9-cd7ecb880e9d" class=""><strong>13. Example: Resolver (Pre-fetch Data Before Loading)</strong></h3><h3 id="2a7536a1-10ea-8077-9f16-fd1c902ed5bd" class=""><strong>user.resolver.ts</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80c3-97aa-f7c75eb0488d" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@Injectable({ providedIn: &#x27;root&#x27; })
+export class UserResolver implements Resolve&lt;User&gt; {
+  constructor(private userService: UserService) {}
+
+  resolve(route: ActivatedRouteSnapshot): Observable&lt;User&gt; {
+    const id = route.paramMap.get(&#x27;id&#x27;);
+    return this.userService.getUserById(Number(id));
+  }
+}
+</code></pre><h3 id="2a7536a1-10ea-8099-92cd-ed3b5631fae6" class=""><strong>app-routing.module.ts</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8022-a4b2-c65d2ddc3f54" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">{ path: &#x27;users/:id&#x27;, component: UserComponent, resolve: { user: UserResolver } }
+</code></pre><h3 id="2a7536a1-10ea-803f-bffe-cb74c855570e" class=""><strong>In Component</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8033-ac65-f75e7f55f7a6" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">ngOnInit() {
+  this.route.data.subscribe(({ user }) =&gt; {
+    this.user = user;
+  });
+}
+</code></pre><hr id="2a7536a1-10ea-8072-91c0-d5f28ba4567a"/><h3 id="2a7536a1-10ea-80be-b600-cd941a448edc" class=""><strong>14. CanLoad and CanMatch (for Lazy Modules)</strong></h3><p id="2a7536a1-10ea-808b-b730-e61496b60f68" class="">Used to <strong>restrict loading of lazy modules</strong>.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-800e-b302-de88b3a6377f" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export class AdminGuard implements CanLoad {
+  canLoad(): boolean {
+    return localStorage.getItem(&#x27;role&#x27;) === &#x27;admin&#x27;;
+  }
+}
+</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-808b-8012-c3a0f889a175" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">{ path: &#x27;admin&#x27;, loadChildren: () =&gt; import(&#x27;./admin/admin.module&#x27;).then(m =&gt; m.AdminModule), canLoad: [AdminGuard] }
+</code></pre><p id="2a7536a1-10ea-8034-bb9e-cad328b2935d" class=""><code>CanMatch</code> (Angular 15+) offers more flexibility:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80d6-8e91-e40c7d66b35d" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export class RoleGuard implements CanMatch {
+  canMatch(): boolean {
+    return localStorage.getItem(&#x27;role&#x27;) === &#x27;manager&#x27;;
+  }
+}
+</code></pre><hr id="2a7536a1-10ea-804d-8301-c134dbc7bd7b"/><h3 id="2a7536a1-10ea-80b5-a071-f4ee4b9ea433" class=""><strong>15. Redirects and Wildcards</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a2-852d-d04240d59c06" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">{ path: &#x27;&#x27;, redirectTo: &#x27;/home&#x27;, pathMatch: &#x27;full&#x27; },
+{ path: &#x27;**&#x27;, component: PageNotFoundComponent }
+</code></pre><ul id="2a7536a1-10ea-80e2-9c45-d04aef80304e" class="bulleted-list"><li style="list-style-type:disc"><code>pathMatch: &#x27;full&#x27;</code> ensures exact path match for redirect.</li></ul><ul id="2a7536a1-10ea-808c-b2d2-d40d7ee98c59" class="bulleted-list"><li style="list-style-type:disc"><code>*</code> catches undefined routes.</li></ul><hr id="2a7536a1-10ea-805b-8bdb-d96cbbf1e1fc"/><h3 id="2a7536a1-10ea-80d0-befa-c829b433de7c" class=""><strong>16. Industry Best Practices</strong></h3><p id="2a7536a1-10ea-8082-bcdc-df6005a966f3" class="">✅ Keep routing definitions in separate <code>*-routing.module.ts</code> files.</p><p id="2a7536a1-10ea-80bd-96e1-e49c70c9e77c" class="">✅ Use <strong>lazy loading</strong> for large feature modules.</p><p id="2a7536a1-10ea-8023-907b-f732607be8f4" class="">✅ Protect private routes with <strong>Auth Guards</strong>.</p><p id="2a7536a1-10ea-8086-a0e3-e90f4437ea3a" class="">✅ Use <strong>Resolvers</strong> for pre-fetching data.</p><p id="2a7536a1-10ea-8049-a9c3-eab3877b9dd7" class="">✅ Apply <strong>PreloadAllModules</strong> for hybrid performance.</p><p id="2a7536a1-10ea-80bc-bbd5-ff1e17771181" class="">✅ Handle <code>404</code> with wildcard routes.</p><p id="2a7536a1-10ea-80f2-a3f5-eefd15a8683e" class="">✅ Store tokens in <code>localStorage</code> or <code>sessionStorage</code> (never hardcoded).</p><hr id="2a7536a1-10ea-80e1-a63a-eba9b35f65d1"/><h3 id="2a7536a1-10ea-8081-863c-f104caa24d29" class=""><strong>17. Quick Visual Summary</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8084-8dd2-d0dd424957dd" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">User clicks link → Router parses URL →
+  → Finds matching route → Checks guards →
+  → If allowed, loads module/component →
+  → Displays inside &lt;router-outlet&gt;
+</code></pre><hr id="2a7536a1-10ea-80ef-923b-f24b178b9e53"/><h3 id="2a7536a1-10ea-80b6-b105-de0300eaa636" class=""><strong>18. Mini Project Example: Auth + Lazy + Guards</strong></h3><ul id="2a7536a1-10ea-804d-ae44-db9609aca1c0" class="bulleted-list"><li style="list-style-type:disc"><code>/login</code> → Public</li></ul><ul id="2a7536a1-10ea-8084-a5f5-c56936bbad2f" class="bulleted-list"><li style="list-style-type:disc"><code>/dashboard</code> → Protected (CanActivate)</li></ul><ul id="2a7536a1-10ea-8016-80e9-fe20252d301c" class="bulleted-list"><li style="list-style-type:disc"><code>/admin</code> → Lazy loaded (CanLoad)</li></ul><ul id="2a7536a1-10ea-8069-8bd8-c25060121963" class="bulleted-list"><li style="list-style-type:disc"><code>/profile/:id</code> → Uses Resolver</li></ul><p id="2a7536a1-10ea-802b-9214-ed495784088b" class="">✅ Real-world pattern for production-grade Angular apps.</p><hr id="2a7536a1-10ea-800b-94d7-d23c2c2d168e"/></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

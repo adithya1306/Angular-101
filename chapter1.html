@@ -1,0 +1,776 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Chapter 1 - Angular Fundamentals - Folder Structure, Data Binding and Directives</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2a7536a1-10ea-8099-b87c-d50615c42a7e" class="page sans"><header><h1 class="page-title">Chapter 1 - Angular Fundamentals - Folder Structure, Data Binding and Directives</h1><p class="page-description"></p></header><div class="page-body"><h2 id="2a7536a1-10ea-80b0-9e27-cc0b4adc0f32" class=""><strong>1. What is Angular?</strong></h2><p id="2a7536a1-10ea-80f4-8578-e33795e1c2be" class=""><strong>Angular</strong> is a <strong>TypeScript-based, component-driven front-end framework</strong> developed and maintained by <strong>Google</strong> for building <strong>single-page applications (SPAs)</strong>.</p><p id="2a7536a1-10ea-80e3-a76c-d570ae23f851" class="">It provides tools for:</p><ul id="2a7536a1-10ea-8046-abf3-c841f49869b3" class="bulleted-list"><li style="list-style-type:disc">Two-way data binding</li></ul><ul id="2a7536a1-10ea-80a6-bf72-ff7562b0b078" class="bulleted-list"><li style="list-style-type:disc">Dependency Injection</li></ul><ul id="2a7536a1-10ea-80d8-b378-f362a2b1a67e" class="bulleted-list"><li style="list-style-type:disc">Routing and HTTP client</li></ul><ul id="2a7536a1-10ea-80de-b682-c3d3494e3374" class="bulleted-list"><li style="list-style-type:disc">Reactive forms</li></ul><ul id="2a7536a1-10ea-80a4-b5eb-ebc9e3691e89" class="bulleted-list"><li style="list-style-type:disc">Testing support</li></ul><ul id="2a7536a1-10ea-8091-8754-d0e4f647fb07" class="bulleted-list"><li style="list-style-type:disc">Performance optimizations (AOT, lazy loading)</li></ul><hr id="2a7536a1-10ea-80d5-8bf4-d6455ec8ecf9"/><h3 id="2a7536a1-10ea-803f-9be7-f19f42ec8157" class=""><strong>Angular vs AngularJS vs React</strong></h3><table id="2a7536a1-10ea-804d-91df-cd81ea2e4c59" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-802b-87c5-c97338c5d772"><th id="&gt;;Px" class="simple-table-header-color simple-table-header">Feature</th><th id="Xx@h" class="simple-table-header-color simple-table-header"><strong>Angular (2+)</strong></th><th id="?jkO" class="simple-table-header-color simple-table-header"><strong>AngularJS (1.x)</strong></th><th id="zmjV" class="simple-table-header-color simple-table-header"><strong>React</strong></th></tr></thead><tbody><tr id="2a7536a1-10ea-80c4-89a6-e719e8adbe79"><td id="&gt;;Px" class=""><strong>Language</strong></td><td id="Xx@h" class="">TypeScript</td><td id="?jkO" class="">JavaScript (ES5)</td><td id="zmjV" class="">JavaScript (JSX)</td></tr><tr id="2a7536a1-10ea-8085-a961-d86b49c0a08d"><td id="&gt;;Px" class=""><strong>Architecture</strong></td><td id="Xx@h" class="">Component-based</td><td id="?jkO" class="">MVC</td><td id="zmjV" class="">Component-based</td></tr><tr id="2a7536a1-10ea-80e4-ba11-e56e404c644b"><td id="&gt;;Px" class=""><strong>DOM</strong></td><td id="Xx@h" class="">Real DOM with incremental updates</td><td id="?jkO" class="">Real DOM</td><td id="zmjV" class="">Virtual DOM</td></tr><tr id="2a7536a1-10ea-80fc-8fab-fbacab77b6bc"><td id="&gt;;Px" class=""><strong>Data Binding</strong></td><td id="Xx@h" class="">Two-way + One-way</td><td id="?jkO" class="">Two-way</td><td id="zmjV" class="">One-way (unidirectional)</td></tr><tr id="2a7536a1-10ea-80d2-a42e-c227576a2b1f"><td id="&gt;;Px" class=""><strong>Dependency Injection</strong></td><td id="Xx@h" class="">Built-in</td><td id="?jkO" class="">Built-in (limited)</td><td id="zmjV" class="">External libraries</td></tr><tr id="2a7536a1-10ea-8051-bc0d-ce52a45e55f8"><td id="&gt;;Px" class=""><strong>Learning Curve</strong></td><td id="Xx@h" class="">Moderate</td><td id="?jkO" class="">Easy</td><td id="zmjV" class="">Moderate</td></tr><tr id="2a7536a1-10ea-80d1-b65b-d1acf91a51dc"><td id="&gt;;Px" class=""><strong>Performance</strong></td><td id="Xx@h" class="">High (AOT, lazy loading)</td><td id="?jkO" class="">Low for large apps</td><td id="zmjV" class="">High (Virtual DOM)</td></tr><tr id="2a7536a1-10ea-8010-929a-f54b4bc13887"><td id="&gt;;Px" class=""><strong>Developed by</strong></td><td id="Xx@h" class="">Google</td><td id="?jkO" class="">Google</td><td id="zmjV" class="">Meta (Facebook)</td></tr></tbody></table><blockquote id="2a7536a1-10ea-808f-b0e6-dc5e03d35478" class="">💡 Summary: Angular is a complete framework with its own ecosystem (routing, forms, DI), while React is a UI library that needs external tools for full app development.</blockquote><hr id="2a7536a1-10ea-8078-b24b-f4131eeb8fd3"/><h2 id="2a7536a1-10ea-8017-b2a4-f5ee4996fd39" class=""><strong>2. Angular Architecture Overview</strong></h2><p id="2a7536a1-10ea-80d4-a6ad-ff9dd9aadbac" class="">Angular applications are structured as a <strong>collection of modules</strong>, each containing <strong>components</strong>, <strong>templates</strong>, <strong>services</strong>, and <strong>metadata</strong>.</p><p id="2a7536a1-10ea-80c8-9ab1-cfc447dabef2" class="">Here’s the big picture 👇</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-806e-8725-e88619c84f49" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">Angular Application
+│
+├── Modules (NgModules)
+│    ├── Components
+│    │     ├── Templates (HTML)
+│    │     ├── Styles (CSS)
+│    │     └── Logic (TypeScript)
+│    │
+│    ├── Directives
+│    ├── Pipes
+│    └── Services (with Dependency Injection)
+│
+└── Bootstrapped by the Root Module (AppModule)
+</code></pre><hr id="2a7536a1-10ea-80a6-b04a-ebb387aab282"/><h3 id="2a7536a1-10ea-80f3-9713-dd143b1334f6" class=""><strong>🔹 2.1 Modules (</strong><code><strong>NgModule</strong></code><strong>)</strong></h3><ul id="2a7536a1-10ea-80c0-a634-d6fd889dab46" class="bulleted-list"><li style="list-style-type:disc">A <strong>container</strong> that groups related components, directives, and services.</li></ul><ul id="2a7536a1-10ea-80e9-8cf6-eeec9ebdb8d2" class="bulleted-list"><li style="list-style-type:disc">Each app has a <strong>root module (</strong><code><strong>AppModule</strong></code><strong>)</strong>, and optionally <strong>feature modules</strong>.</li></ul><ul id="2a7536a1-10ea-806c-abd9-f378a04796d6" class="bulleted-list"><li style="list-style-type:disc">Declared with the <code>@NgModule</code> decorator.</li></ul><p id="2a7536a1-10ea-8076-b418-e6cbe5fee877" class=""><strong>Example:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80e5-9691-fe0d4564d730" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@NgModule({
+  declarations: [AppComponent, UserComponent],
+  imports: [BrowserModule, FormsModule],
+  providers: [UserService],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+</code></pre><hr id="2a7536a1-10ea-80e6-ad0f-c60c2d1d3c8b"/><h3 id="2a7536a1-10ea-805b-8c8c-c2938f9b0438" class=""><strong>🔹 2.2 Components</strong></h3><ul id="2a7536a1-10ea-8046-9ce2-d3cc0bb1165e" class="bulleted-list"><li style="list-style-type:disc">The <strong>building blocks</strong> of Angular UI.</li></ul><ul id="2a7536a1-10ea-8058-8d08-e8f1f5f00d3e" class="bulleted-list"><li style="list-style-type:disc">Each component has:<ul id="2a7536a1-10ea-800f-8caf-f1539190f35a" class="bulleted-list"><li style="list-style-type:circle">A <strong>TypeScript class</strong> (logic)</li></ul><ul id="2a7536a1-10ea-8016-9001-fe7b02d8e80b" class="bulleted-list"><li style="list-style-type:circle">An <strong>HTML template</strong> (view)</li></ul><ul id="2a7536a1-10ea-806b-a895-ee08f2709dd3" class="bulleted-list"><li style="list-style-type:circle">Optional <strong>CSS styles</strong></li></ul><ul id="2a7536a1-10ea-808f-acae-f6bbf9407ae2" class="bulleted-list"><li style="list-style-type:circle">A <strong>metadata decorator</strong> <code>@Component</code></li></ul></li></ul><p id="2a7536a1-10ea-8071-8f33-ebd50a4a3dda" class=""><strong>Example:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8004-8c32-d647b212fa02" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@Component({
+  selector: &#x27;app-user&#x27;,
+  templateUrl: &#x27;./user.component.html&#x27;,
+  styleUrls: [&#x27;./user.component.css&#x27;]
+})
+export class UserComponent {
+  username = &#x27;Adithya&#x27;;
+}
+</code></pre><p id="2a7536a1-10ea-800e-adeb-c766413b86c7" class=""><strong>Template (user.component.html):</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8010-858a-e442300e7b05" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;h2&gt;Hello {{ username }}!&lt;/h2&gt;
+</code></pre><hr id="2a7536a1-10ea-801f-aed1-eb3cb6fd9b65"/><h3 id="2a7536a1-10ea-80c9-9b11-e0e0027c1b70" class=""><strong>🔹 2.3 Templates</strong></h3><ul id="2a7536a1-10ea-8023-88c8-f48a4ba2b681" class="bulleted-list"><li style="list-style-type:disc">Templates define <strong>the view</strong> of the component using HTML + Angular syntax.</li></ul><ul id="2a7536a1-10ea-8099-b104-d70fe99d41ba" class="bulleted-list"><li style="list-style-type:disc">You can use <strong>interpolation</strong>, <strong>directives</strong>, and <strong>binding syntax</strong>.</li></ul><hr id="2a7536a1-10ea-8093-bc2c-e0de6042f1bf"/><h3 id="2a7536a1-10ea-8041-9f72-c86673b00c41" class=""><strong>🔹 2.4 Metadata</strong></h3><ul id="2a7536a1-10ea-800b-805b-ed23b3d2795b" class="bulleted-list"><li style="list-style-type:disc">Metadata tells Angular <strong>how to process a class</strong>.</li></ul><ul id="2a7536a1-10ea-8098-a1b2-c9ab6bb92d98" class="bulleted-list"><li style="list-style-type:disc">Added using decorators:<ul id="2a7536a1-10ea-80cc-adf6-c8b20c131256" class="bulleted-list"><li style="list-style-type:circle"><code>@Component()</code> for components</li></ul><ul id="2a7536a1-10ea-80ac-9b35-eaa6a7036beb" class="bulleted-list"><li style="list-style-type:circle"><code>@NgModule()</code> for modules</li></ul><ul id="2a7536a1-10ea-80b6-8979-e967500f87a9" class="bulleted-list"><li style="list-style-type:circle"><code>@Injectable()</code> for services</li></ul></li></ul><hr id="2a7536a1-10ea-8046-8045-fd7dc9acb110"/><h3 id="2a7536a1-10ea-8052-934f-e31f20de2f25" class=""><strong>🔹 2.5 Data Binding (Very Important)</strong></h3><p id="2a7536a1-10ea-80e4-ab8d-cbf576889be3" class="">Angular supports <strong>4 types of data binding</strong> 👇</p><h3 id="2a7536a1-10ea-80a5-823f-faa9641826c9" class=""><strong>1️⃣ Interpolation (One-way binding from TS → Template)</strong></h3><p id="2a7536a1-10ea-80dc-8e12-d1b03726037b" class="">Used to display component data in the view.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-800c-83f3-d9bfe78b1fa8" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;p&gt;Welcome {{ username }}&lt;/p&gt;
+</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8075-ab0b-f5fe1a33c43b" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export class AppComponent {
+  username = &#x27;Adithya&#x27;;
+}
+</code></pre><p id="2a7536a1-10ea-8066-8c58-c30d946750bd" class="">✅ Updates <strong>automatically</strong> when <code>username</code> changes.</p><hr id="2a7536a1-10ea-80fc-a429-faa04a7f61de"/><h3 id="2a7536a1-10ea-809d-920e-fa8a32f73751" class=""><strong>2️⃣ Property Binding (One-way binding from TS → HTML attribute)</strong></h3><p id="2a7536a1-10ea-80a5-aa01-df3a9a75ebaf" class="">Used to <strong>bind component properties</strong> to HTML <strong>element or directive properties</strong>.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-801b-990d-ef75f42654c3" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;img [src]=&quot;profilePicUrl&quot; [alt]=&quot;username&quot;&gt;</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a2-aabe-f29b84ac228c" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export class AppComponent {
+  profilePicUrl = &#x27;assets/adithya.png&#x27;;
+  username = &#x27;Adithya&#x27;;
+}</code></pre><p id="2a7536a1-10ea-80ef-a567-f6348bab8946" class="">✅ The square brackets <code>[ ]</code> denote <strong>property binding</strong>.</p><hr id="2a7536a1-10ea-80fb-b2ac-eb900a57c81b"/><h3 id="2a7536a1-10ea-8083-ba15-fe4421cb2960" class=""><strong>3️⃣ Event Binding (Template → Component)</strong></h3><p id="2a7536a1-10ea-80b1-b10b-e555fad15c23" class="">Used to handle <strong>user input or DOM events</strong>.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80e9-924d-db3ad0d8fbde" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;button (click)=&quot;onGreet()&quot;&gt;Greet&lt;/button&gt;</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80ff-a43e-efad3a17aad3" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export class AppComponent {
+  onGreet() {
+    alert(&#x27;Hello Adithya!&#x27;);
+  }
+}</code></pre><p id="2a7536a1-10ea-80a8-9017-f7a3b91e8e98" class="">✅ Parentheses <code>( )</code> denote <strong>event binding</strong>.</p><hr id="2a7536a1-10ea-80bf-9d18-c0b64ff414e9"/><h3 id="2a7536a1-10ea-80cc-83f8-f4f0ed0b513e" class=""><strong>4️⃣ Two-Way Binding (TS ↔ Template)</strong></h3><p id="2a7536a1-10ea-800f-8739-f7b93b7442a6" class="">Used to <strong>synchronize</strong> data between the component and view.</p><p id="2a7536a1-10ea-80f7-abaf-f55d6e7d4010" class="">You need to import <strong>FormsModule</strong> for this.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-809a-8335-fd37fb2016b4" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;input [(ngModel)]=&quot;username&quot; placeholder=&quot;Enter name&quot;&gt;
+&lt;p&gt;Hello {{ username }}!&lt;/p&gt;</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80dc-abd5-d26f5c60f113" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export class AppComponent {
+  username = &#x27;&#x27;;
+}</code></pre><p id="2a7536a1-10ea-80eb-b23d-f8590d32b500" class="">✅ <code>[( )]</code> = <strong>Banana in a box 🍌</strong> — combines property + event binding.</p><hr id="2a7536a1-10ea-8021-96d8-f3c8dea16b11"/><h3 id="2a7536a1-10ea-809b-9d81-c2876fe2a489" class=""><strong>Comparison Summary</strong></h3><table id="2a7536a1-10ea-804e-89bc-dc2efaad9f2e" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-80b4-9475-fc6f62a6a21e"><th id="`Qpn" class="simple-table-header-color simple-table-header">Type</th><th id="Y`Tg" class="simple-table-header-color simple-table-header">Direction</th><th id="eOV&lt;" class="simple-table-header-color simple-table-header">Syntax</th><th id="v=Y[" class="simple-table-header-color simple-table-header">Example</th></tr></thead><tbody><tr id="2a7536a1-10ea-8008-ab96-f390104b6d9b"><td id="`Qpn" class="">Interpolation</td><td id="Y`Tg" class="">TS → Template</td><td id="eOV&lt;" class=""><code>{{ }}</code></td><td id="v=Y[" class=""><code>&lt;p&gt;{{ username }}&lt;/p&gt;</code></td></tr><tr id="2a7536a1-10ea-8069-a398-f96202cd8eda"><td id="`Qpn" class="">Property Binding</td><td id="Y`Tg" class="">TS → Template</td><td id="eOV&lt;" class=""><code>[ ]</code></td><td id="v=Y[" class=""><code>&lt;img [src]=&quot;url&quot;&gt;</code></td></tr><tr id="2a7536a1-10ea-80e4-ac86-c71d6b354988"><td id="`Qpn" class="">Event Binding</td><td id="Y`Tg" class="">Template → TS</td><td id="eOV&lt;" class=""><code>( )</code></td><td id="v=Y[" class=""><code>&lt;button (click)=&quot;onClick()&quot;&gt;</code></td></tr><tr id="2a7536a1-10ea-8077-ab33-da9c08a49cbf"><td id="`Qpn" class="">Two-Way Binding</td><td id="Y`Tg" class="">TS ↔ Template</td><td id="eOV&lt;" class=""><code>[( )]</code></td><td id="v=Y[" class=""><code>&lt;input [(ngModel)]=&quot;value&quot;&gt;</code></td></tr></tbody></table><hr id="2a7536a1-10ea-807a-9c5a-d8819ee9f0d4"/><h3 id="2a7536a1-10ea-80af-9785-db51185e9584" class=""><strong>🔹 2.6 Directives</strong></h3><p id="2a7536a1-10ea-8076-8b13-c0530b3998a1" class="">Directives modify <strong>DOM behavior or structure</strong>.</p><ul id="2a7536a1-10ea-8099-ac76-e7b969c72ca0" class="bulleted-list"><li style="list-style-type:disc"><strong>Structural Directives</strong> — Change the DOM layout.<ul id="2a7536a1-10ea-80f9-a315-d62d7c51644b" class="bulleted-list"><li style="list-style-type:circle"><code>ngIf</code>, <code>ngFor</code>, <code>ngSwitch</code></li></ul></li></ul><ul id="2a7536a1-10ea-80a9-bb7d-d6acc3fb8eb9" class="bulleted-list"><li style="list-style-type:disc"><strong>Attribute Directives</strong> — Change element appearance or behavior.<ul id="2a7536a1-10ea-804a-a1e7-f86f93a7d718" class="bulleted-list"><li style="list-style-type:circle"><code>ngStyle</code>, <code>ngClass</code></li></ul></li></ul><p id="2a7536a1-10ea-80f7-ac57-c47ee986b66b" class="">Example:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80ac-891c-df25f7c7971b" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;p *ngIf=&quot;isLoggedIn&quot;&gt;Welcome {{ username }}&lt;/p&gt;
+&lt;li *ngFor=&quot;let user of users&quot;&gt;{{ user }}&lt;/li&gt;
+</code></pre><hr id="2a7536a1-10ea-80d9-b8ad-db941c483e76"/><h3 id="2a7536a1-10ea-80cf-b5df-e08fe5d8c352" class=""><strong>🔹 2.7 Services</strong></h3><ul id="2a7536a1-10ea-80d3-85b3-d9500628aad3" class="bulleted-list"><li style="list-style-type:disc">Used for <strong>business logic</strong>, <strong>data sharing</strong>, and <strong>API calls</strong>.</li></ul><ul id="2a7536a1-10ea-801c-8191-d2817abcddab" class="bulleted-list"><li style="list-style-type:disc">Decorated with <code>@Injectable()</code> and injected using Angular’s <strong>Dependency Injection (DI)</strong>.</li></ul><p id="2a7536a1-10ea-80d1-aba9-e62f1ffa6a67" class=""><strong>Example:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8031-af1c-e5e3dd88b18c" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@Injectable({ providedIn: &#x27;root&#x27; })
+export class UserService {
+  getUsers() {
+    return [&#x27;Adithya&#x27;, &#x27;Ravi&#x27;, &#x27;Priya&#x27;];
+  }
+}</code></pre><p id="2a7536a1-10ea-804c-8342-cfa852897055" class="">Injected into a component:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8024-936b-d219c05b3fb2" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export class UserComponent {
+  users: string[];
+  constructor(private userService: UserService) {
+    this.users = userService.getUsers();
+  }
+}</code></pre><hr id="2a7536a1-10ea-802a-8bfc-c1f8c4eaa3cc"/><h3 id="2a7536a1-10ea-80d8-a4a8-dcfd8968a5b6" class=""><strong>🔹 2.8 Dependency Injection (DI)</strong></h3><ul id="2a7536a1-10ea-8057-9416-eec0d148ab22" class="bulleted-list"><li style="list-style-type:disc">Angular’s built-in design pattern to <strong>inject dependencies</strong> instead of manually creating them.</li></ul><p id="2a7536a1-10ea-807a-9076-f1e35998b561" class="">Without DI:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80b6-8eca-f29fd9990418" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">const service = new UserService(); // tight coupling</code></pre><p id="2a7536a1-10ea-80cc-b6a8-e5f0492043c5" class="">With DI:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80b7-8092-c485e392520a" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">constructor(private userService: UserService) {}</code></pre><p id="2a7536a1-10ea-80c0-94fb-d16a8159fa58" class="">✅ Angular creates and provides the instance automatically.</p><hr id="2a7536a1-10ea-80c0-8293-fe6d12398e6a"/><h2 id="2a7536a1-10ea-80bb-a3a2-eb8f964d21da" class=""><strong>3. Angular CLI (Command Line Interface)</strong></h2><p id="2a7536a1-10ea-808c-9956-ef34d5e161b7" class="">CLI simplifies project setup, scaffolding, and builds.</p><h3 id="2a7536a1-10ea-809a-b83a-dc5a86628ae3" class=""><strong>Common Commands</strong></h3><table id="2a7536a1-10ea-807a-9afe-e2f3e984c36b" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-8090-9507-c6fadb6ffd47"><th id="__CE" class="simple-table-header-color simple-table-header">Command</th><th id="K&gt;B_" class="simple-table-header-color simple-table-header">Description</th></tr></thead><tbody><tr id="2a7536a1-10ea-80df-9903-cfa49cb5b697"><td id="__CE" class=""><code>ng new project-name</code></td><td id="K&gt;B_" class="">Create a new Angular project</td></tr><tr id="2a7536a1-10ea-80f0-a31e-c316b8983606"><td id="__CE" class=""><code>ng serve</code></td><td id="K&gt;B_" class="">Run development server (default port: 4200)</td></tr><tr id="2a7536a1-10ea-8050-b907-d55f674cef9a"><td id="__CE" class=""><code>ng generate component name</code></td><td id="K&gt;B_" class="">Create a new component</td></tr><tr id="2a7536a1-10ea-8089-8af3-ff8706640de1"><td id="__CE" class=""><code>ng generate service name</code></td><td id="K&gt;B_" class="">Create a new service</td></tr><tr id="2a7536a1-10ea-802f-97d5-f395993b785a"><td id="__CE" class=""><code>ng generate module name</code></td><td id="K&gt;B_" class="">Create a new module</td></tr><tr id="2a7536a1-10ea-8032-b5b4-ddf48a59513e"><td id="__CE" class=""><code>ng build</code></td><td id="K&gt;B_" class="">Build app for production</td></tr><tr id="2a7536a1-10ea-8075-86ef-fd841c90dc35"><td id="__CE" class=""><code>ng test</code></td><td id="K&gt;B_" class="">Run unit tests</td></tr><tr id="2a7536a1-10ea-80bc-b190-ebb3a409b492"><td id="__CE" class=""><code>ng lint</code></td><td id="K&gt;B_" class="">Run linting checks</td></tr><tr id="2a7536a1-10ea-80c7-9149-fef85ada3a15"><td id="__CE" class=""><code>ng add &lt;library&gt;</code></td><td id="K&gt;B_" class="">Add a library (e.g., Angular Material)</td></tr><tr id="2a7536a1-10ea-80f2-8640-d3cdf34855fd"><td id="__CE" class=""><code>ng deploy</code></td><td id="K&gt;B_" class="">Deploy project to a hosting platform</td></tr></tbody></table><hr id="2a7536a1-10ea-80a9-ab7a-cdee2443a174"/><h3 id="2a7536a1-10ea-8020-805c-e2cd2950a7d3" class=""><strong>CLI Workspace Structure</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80f9-adb9-fda6c9ccb6b9" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">my-app/
+├── src/
+│   ├── app/
+│   │   ├── app.module.ts
+│   │   ├── app.component.ts
+│   │   ├── app.component.html
+│   │   └── ...
+│   ├── assets/
+│   ├── environments/
+│   └── index.html
+├── angular.json
+├── package.json
+├── tsconfig.json
+└── node_modules/
+</code></pre><hr id="2a7536a1-10ea-8007-afac-eaf196d809f9"/><h3 id="2a7536a1-10ea-809f-9a2e-d494dd678fc2" class=""><strong>Schematics</strong></h3><ul id="2a7536a1-10ea-80ed-89ba-eb299d58d874" class="bulleted-list"><li style="list-style-type:disc">Schematics are <strong>code generators</strong> used by Angular CLI to automate scaffolding.</li></ul><ul id="2a7536a1-10ea-8061-80f7-df1d47ca2996" class="bulleted-list"><li style="list-style-type:disc">You can also create <strong>custom schematics</strong> for enterprise-level automation.</li></ul><p id="2a7536a1-10ea-80a3-81e8-d8b9ecc00530" class="">Example:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80ba-953d-c2048fd3ad40" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">ng generate component user
+ize:14px;padding-top:2em"></span></body></html></code></pre><p id="2a7536a1-10ea-8076-81b2-cba9427cc698" class="">This uses the <strong>component schematic</strong> internally to create <code>.ts</code>, <code>.html</code>, <code>.css</code>, and <code>.spec.ts</code> files automatically.</p><hr id="2a7536a1-10ea-8020-ba6c-e149061022a0"/><p id="2a7536a1-10ea-80af-a6bf-e00e86c710f1" class="">✅ <strong>In summary:</strong></p><ul id="2a7536a1-10ea-8072-9104-ee32e84b7a9f" class="bulleted-list"><li style="list-style-type:disc">Angular = complete TypeScript-based SPA framework</li></ul><ul id="2a7536a1-10ea-80e0-bee0-d7b908c70f05" class="bulleted-list"><li style="list-style-type:disc">Architecture = modular + component-driven</li></ul><ul id="2a7536a1-10ea-809f-b432-f79586c6f164" class="bulleted-list"><li style="list-style-type:disc">Binding = 4 types (Interpolation, Property, Event, Two-way)</li></ul><ul id="2a7536a1-10ea-807c-8a9a-d0eb1240c3e5" class="bulleted-list"><li style="list-style-type:disc">CLI = automates building, generating, and managing projects</li></ul><hr id="2a7536a1-10ea-8037-874c-cad63450504f"/></div></article><span class="sans" style="font-s

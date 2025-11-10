@@ -1,0 +1,871 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Chapter 2 - TypeScript in Angular</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2a7536a1-10ea-80c6-86b6-d0b7501596dd" class="page sans"><header><h1 class="page-title">Chapter 2 - TypeScript in Angular</h1><p class="page-description"></p></header><div class="page-body"><hr id="2a7536a1-10ea-8043-a771-d7205d125a86"/><h2 id="2a7536a1-10ea-802d-9702-ce8874d73b58" class=""><strong>1. Why TypeScript for Angular</strong></h2><p id="2a7536a1-10ea-8053-8ebc-f731a2581424" class="">Angular is written entirely in <strong>TypeScript</strong> — a <strong>superset of JavaScript</strong> that adds:</p><ul id="2a7536a1-10ea-80ac-a4ae-eb5c42ee4c78" class="bulleted-list"><li style="list-style-type:disc">Static typing</li></ul><ul id="2a7536a1-10ea-800d-ba80-e6ead38135c6" class="bulleted-list"><li style="list-style-type:disc">Interfaces and generics</li></ul><ul id="2a7536a1-10ea-8086-b189-f9811e0f6a19" class="bulleted-list"><li style="list-style-type:disc">Classes and access modifiers</li></ul><ul id="2a7536a1-10ea-8041-9611-ddd58041f815" class="bulleted-list"><li style="list-style-type:disc">Decorators</li></ul><ul id="2a7536a1-10ea-8096-ad0c-e89e31db2d09" class="bulleted-list"><li style="list-style-type:disc">Tooling (autocompletion, type checking)</li></ul><p id="2a7536a1-10ea-806c-a59f-d79729ee069b" class="">👉 It compiles down to JavaScript for browser execution, but adds powerful features for <strong>large-scale, maintainable applications</strong>.</p><hr id="2a7536a1-10ea-80e4-952c-d5e015904618"/><h2 id="2a7536a1-10ea-804e-b51e-c0e5cae0dab8" class=""><strong>2. Core TypeScript Concepts</strong></h2><hr id="2a7536a1-10ea-80f3-a984-f88025e811d9"/><h3 id="2a7536a1-10ea-804c-a728-d16e3a59ea64" class=""><strong>2.1 Variables and Type Annotations</strong></h3><p id="2a7536a1-10ea-8030-9a77-d58270ae6a74" class="">You can declare variables with <strong>explicit types</strong> for safety and clarity.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8041-a12c-f27c440af464" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">let username: string = &#x27;Adithya&#x27;;
+let age: number = 22;
+let isAdmin: boolean = true;
+let skills: string[] = [&#x27;Angular&#x27;, &#x27;Spring Boot&#x27;];</code></pre><p id="2a7536a1-10ea-8069-a93f-fc78496ea555" class="">Type inference:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80c5-9c00-ccfa77661afc" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">let city = &#x27;Chennai&#x27;; // inferred as string automatically</code></pre><hr id="2a7536a1-10ea-80a4-b5c5-d5b76feb6ac1"/><h3 id="2a7536a1-10ea-8001-a160-c1562e41bb53" class=""><strong>2.2 Functions and Return Types</strong></h3><p id="2a7536a1-10ea-8027-9a82-e1bfdb125d8e" class="">You can define parameter and return types.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80e4-a634-cc4b822b2e41" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">function greet(name: string): string {
+  return `Hello, ${name}!`;
+}
+
+const result = greet(&#x27;Adithya&#x27;);</code></pre><p id="2a7536a1-10ea-80ff-8a11-e187fe4a2a0d" class="">Functions can also have <strong>optional</strong> and <strong>default parameters</strong>:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8097-92ca-c40b5e49a62b" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">function add(a: number, b: number = 5): number {
+  return a + b;
+}</code></pre><p id="2a7536a1-10ea-80c0-80c2-c9d61eae72cc" class="">Arrow functions (commonly used in Angular components):</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80fe-b532-fba1eed07d1a" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">const double = (x: number): number =&gt; x * 2;</code></pre><hr id="2a7536a1-10ea-8070-aba3-ed90bb0a7a35"/><h3 id="2a7536a1-10ea-803e-8c2d-f544203b201c" class=""><strong>2.3 Interfaces</strong></h3><p id="2a7536a1-10ea-8095-ac54-cbcc848d4467" class="">Interfaces define <strong>contracts</strong> for object structure — extremely useful for defining API models or data types in Angular services.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8073-9475-fbe44fd13fd6" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const user: User = {
+  id: 1,
+  name: &#x27;Adithya&#x27;,
+  email: &#x27;adithya@example.com&#x27;
+};</code></pre><p id="2a7536a1-10ea-80e7-8fb1-d8d24106c0a9" class="">Used in Angular components:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a4-9741-f37fb4d8b24e" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export class UserComponent {
+  user: User = { id: 1, name: &#x27;Adithya&#x27;, email: &#x27;adithya@example.com&#x27; };
+}</code></pre><p id="2a7536a1-10ea-8006-9f0e-dfe42ee49bc5" class="">✅ Helps with <strong>type safety</strong> and <strong>code completion</strong> in editors.</p><hr id="2a7536a1-10ea-80b4-b871-eb4de65f57ab"/><h3 id="2a7536a1-10ea-80aa-be8f-f3794a0fe201" class=""><strong>2.4 Classes and Access Modifiers</strong></h3><p id="2a7536a1-10ea-8007-9100-f9cc7c598172" class="">Angular relies heavily on <strong>classes</strong> — every component, service, and module is a class.</p><p id="2a7536a1-10ea-803d-a440-f0645e1538fe" class="">Example:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80c9-a355-c20acb3ae887" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">class User {
+  constructor(
+    public name: string,
+    private age: number
+  ) {}
+
+  getUserInfo(): string {
+    return `${this.name} is ${this.age} years old.`;
+  }
+}
+
+const user = new User(&#x27;Adithya&#x27;, 22);
+console.log(user.getUserInfo());</code></pre><table id="2a7536a1-10ea-8022-b101-f3871b7c5807" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-80c7-b5a8-d3829cbdd2ed"><th id="BIfY" class="simple-table-header-color simple-table-header">Modifier</th><th id="]Je~" class="simple-table-header-color simple-table-header">Scope</th><th id="KUfT" class="simple-table-header-color simple-table-header">Used for</th></tr></thead><tbody><tr id="2a7536a1-10ea-8052-9718-fc4b022184c5"><td id="BIfY" class=""><code>public</code></td><td id="]Je~" class="">accessible anywhere</td><td id="KUfT" class="">default in TypeScript</td></tr><tr id="2a7536a1-10ea-80dc-9222-e5174413061c"><td id="BIfY" class=""><code>private</code></td><td id="]Je~" class="">accessible only inside the class</td><td id="KUfT" class="">encapsulation</td></tr><tr id="2a7536a1-10ea-80da-9160-c5211308001f"><td id="BIfY" class=""><code>protected</code></td><td id="]Je~" class="">accessible inside class and subclasses</td><td id="KUfT" class="">inheritance</td></tr></tbody></table><hr id="2a7536a1-10ea-8080-842e-c2b767b1c83e"/><h3 id="2a7536a1-10ea-8015-bcf2-df7d138bc697" class=""><strong>2.5 Inheritance &amp; Abstract Classes</strong></h3><p id="2a7536a1-10ea-80a2-8a88-ee823d2334d2" class="">Angular leverages inheritance for base components, reusable logic, etc.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80de-801c-d204e3ee3635" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">abstract class BaseComponent {
+  abstract loadData(): void;
+  log(message: string) {
+    console.log(&#x27;Log:&#x27;, message);
+  }
+}
+
+class DashboardComponent extends BaseComponent {
+  loadData() {
+    this.log(&#x27;Dashboard data loaded&#x27;);
+  }
+}</code></pre><p id="2a7536a1-10ea-8067-80a6-ce6d20011c87" class="">✅ <strong>Use case in Angular:</strong> Common logic like logging, authentication checks, etc., can be abstracted into a base class for multiple components.</p><hr id="2a7536a1-10ea-80cc-ad14-e7c8be9ba79c"/><h3 id="2a7536a1-10ea-8054-b49f-cc82930d28fe" class=""><strong>2.6 Generics</strong></h3><p id="2a7536a1-10ea-8040-9208-cf21dab27ea9" class="">Generics allow reusable functions or classes that work with multiple data types.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80b3-9051-da6193323924" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">function identity&lt;T&gt;(value: T): T {
+  return value;
+}
+
+let num = identity&lt;number&gt;(100);
+let name = identity&lt;string&gt;(&#x27;Adithya&#x27;);</code></pre><p id="2a7536a1-10ea-8057-b056-c9c3df3d7eaf" class="">Example in Angular (common for reusable services):</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80bd-a8cb-ffe0e4ce5595" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">getData&lt;T&gt;(url: string): Observable&lt;T&gt; {
+  return this.http.get&lt;T&gt;(url);
+}</code></pre><p id="2a7536a1-10ea-80ad-89b8-f632eed147ea" class="">✅ Used with HTTP calls, RxJS observables, and data models for strong typing.</p><hr id="2a7536a1-10ea-80cf-be1a-e92946d1d8a7"/><h3 id="2a7536a1-10ea-8022-84cf-fd2d9db696c4" class=""><strong>2.7 Enums</strong></h3><p id="2a7536a1-10ea-80c8-a808-e8ff401f9303" class="">Enums are great for defining a set of named constants — often used in Angular for roles, statuses, or action types.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8058-8fd0-ca108ebb0e4d" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">enum UserRole {
+  ADMIN = &#x27;ADMIN&#x27;,
+  USER = &#x27;USER&#x27;,
+  MENTOR = &#x27;MENTOR&#x27;
+}
+
+export class AuthService {
+  currentRole: UserRole = UserRole.ADMIN;
+}</code></pre><p id="2a7536a1-10ea-804b-adde-f126032a7e3a" class="">Used in templates:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8053-a961-c68a140f0be5" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;p *ngIf=&quot;authService.currentRole === &#x27;ADMIN&#x27;&quot;&gt;Welcome Admin!&lt;/p&gt;</code></pre><hr id="2a7536a1-10ea-80ca-97e0-cd4c966494c4"/><h3 id="2a7536a1-10ea-80b6-a494-c62f7f429a29" class=""><strong>2.8 Modules and Imports/Exports</strong></h3><p id="2a7536a1-10ea-80b4-b4da-d24d9870efce" class="">Each Angular file is a <strong>TypeScript module</strong>.</p><p id="2a7536a1-10ea-80bc-aa44-db2fea4b2769" class="">Example:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8005-a510-f1f724bb1cd4" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">// user.model.ts
+export interface User {
+  id: number;
+  name: string;
+}</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-800c-93de-f2146145e91d" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">// user.service.ts
+import { User } from &#x27;./user.model&#x27;;</code></pre><p id="2a7536a1-10ea-808c-932b-dc1bbd5a8251" class="">✅ Keeps code modular, reusable, and easy to maintain.</p><hr id="2a7536a1-10ea-8058-ac82-e94c5e8094ae"/><h2 id="2a7536a1-10ea-8043-8108-d445c6ffb401" class=""><strong>2.9 Handling Null, Undefined, and Strict Types in Angular</strong></h2><p id="2a7536a1-10ea-80a5-a4a7-e1b9af8c4085" class="">TypeScript uses <em>strict null checks</em> to prevent runtime errors like:</p><blockquote id="2a7536a1-10ea-808c-94c1-f143c9406939" class="">“Cannot read properties of undefined.”</blockquote><p id="2a7536a1-10ea-805d-80fd-f781573ecbb0" class="">This feature forces you to <strong>explicitly declare and handle</strong> variables that can be <code>null</code> or <code>undefined</code>.</p><p id="2a7536a1-10ea-80a9-b3b5-faf9402db603" class="">Let’s go through the important cases you’ll encounter in Angular codebases 👇</p><hr id="2a7536a1-10ea-8052-bf32-c15e8c4ec135"/><h3 id="2a7536a1-10ea-80f7-93a9-dc6bd881c375" class=""><strong>1️⃣ Union Types with </strong><code><strong>null</strong></code><strong> or </strong><code><strong>undefined</strong></code></h3><p id="2a7536a1-10ea-80dc-84bb-c53bc54c4a17" class="">Used when a variable <strong>can</strong> have a real value <strong>or</strong> be empty.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8037-88e7-f7743661ccd3" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">id: number | null = null;</code></pre><p id="2a7536a1-10ea-80fd-8023-d6e44afeedcd" class="">✅ <strong>Explanation:</strong></p><ul id="2a7536a1-10ea-80cb-8ec7-f4a9f6f08655" class="bulleted-list"><li style="list-style-type:disc">The variable <code>id</code> can either hold a number <strong>or</strong> be <code>null</code>.</li></ul><ul id="2a7536a1-10ea-8002-88e3-d1693fbf311d" class="bulleted-list"><li style="list-style-type:disc">Prevents accidental use before assignment.</li></ul><p id="2a7536a1-10ea-80bf-ae48-f063223db497" class="">Example use case in Angular:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80b8-a4aa-c5a4bda46a06" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export class UserComponent {
+  userId: number | null = null;
+
+  selectUser(id: number) {
+    this.userId = id;
+  }
+}
+</code></pre><hr id="2a7536a1-10ea-80eb-b9ab-c895afe57d1f"/><h3 id="2a7536a1-10ea-8097-b54c-ecb3246ef38f" class=""><strong>2️⃣ The </strong><code><strong>!</strong></code><strong> (Definite Assignment Assertion)</strong></h3><h3 id="2a7536a1-10ea-80cb-914c-ff657294d61d" class="">🔹 Usage:</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a4-9bec-cf7de3662a2e" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">username!: string;</code></pre><p id="2a7536a1-10ea-8002-aab4-c372b1f03ec3" class="">✅ <strong>Explanation:</strong></p><ul id="2a7536a1-10ea-80a0-a0e7-f0485aa748e0" class="bulleted-list"><li style="list-style-type:disc">You’re telling TypeScript: <em>“Trust me, this variable will be assigned before use.”</em></li></ul><ul id="2a7536a1-10ea-801e-af15-f53382493d36" class="bulleted-list"><li style="list-style-type:disc">Prevents the “Variable has no initializer” compilation error when using <code>strictPropertyInitialization</code>.</li></ul><p id="2a7536a1-10ea-8039-8353-ec060977e8e3" class="">Example:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a9-8fc2-fee237a90b4c" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export class ProfileComponent implements OnInit {
+  user!: string; // will be initialized later
+
+  ngOnInit() {
+    this.user = &#x27;Adithya&#x27;; // assigned before first use
+  }
+}
+</code></pre><p id="2a7536a1-10ea-809d-9c45-e60155f362b8" class="">⚠️ <strong>Caution:</strong> Only use <code>!</code> when you are <em>100% sure</em> the variable will be initialized before use.</p><p id="2a7536a1-10ea-80fd-9859-d9a73c21588e" class="">Otherwise, it defeats TypeScript’s safety.</p><hr id="2a7536a1-10ea-806b-98a1-ec72d5f68901"/><h3 id="2a7536a1-10ea-8001-9c7e-f66bd427d68f" class=""><strong>3️⃣ The </strong><code><strong>?</strong></code><strong> (Optional Property or Method Parameter)</strong></h3><p id="2a7536a1-10ea-8031-9731-e587eb9d26f5" class="">The <code>?</code> makes a property or parameter <strong>optional</strong> — it may be <code>undefined</code>.</p><h3 id="2a7536a1-10ea-803f-b1d2-d1f14dbbad61" class="">In Interfaces:</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8016-af79-c5ff73859496" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">interface User {
+  id: number;
+  email?: string; // optional property
+}</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80ff-ac5b-c0652cb0ffd6" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">const user1: User = { id: 1 };              // valid
+const user2: User = { id: 2, email: &#x27;a@b&#x27; }; // also valid
+</code></pre><h3 id="2a7536a1-10ea-80bb-9339-f681b64f30e8" class="">In Functions:</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80e8-a8f8-d18fd91b5a6c" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">function greet(name?: string) {
+  console.log(`Hello ${name ?? &#x27;Guest&#x27;}`);
+}</code></pre><p id="2a7536a1-10ea-8021-a95d-e548b85a08da" class="">✅ The <code>??</code> operator here gives a fallback value if <code>name</code> is <code>undefined</code> or <code>null</code>.</p><hr id="2a7536a1-10ea-80eb-9c0e-ce9a7380d132"/><h3 id="2a7536a1-10ea-80b0-82d9-ee99c7366354" class=""><strong>4️⃣ The Non-Null Assertion Operator (</strong><code><strong>variable!</strong></code><strong>)</strong></h3><p id="2a7536a1-10ea-8014-91a5-c5742b96828d" class="">Used when you’re certain that a variable <strong>is not null or undefined</strong> — even though TypeScript thinks it might be.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8009-a9a6-d025f5a8d6c3" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">console.log(user!.email);
+</code></pre><p id="2a7536a1-10ea-8007-8131-ddb10334b73e" class="">✅ Example in Angular Template context:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-807e-97dd-e2f4ab2b1eb7" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export class UserComponent {
+  user: User | null = null;
+
+  ngOnInit() {
+    this.user = { id: 1, name: &#x27;Adithya&#x27;, email: &#x27;a@b.com&#x27; };
+  }
+
+  getUserName() {
+    console.log(this.user!.name); // Assert: user is not null here
+  }
+}
+</code></pre><p id="2a7536a1-10ea-804b-971c-f2ae2c305dad" class="">⚠️ Again, use carefully — if <code>user</code> is <code>null</code>, this will cause a runtime error.</p><hr id="2a7536a1-10ea-80af-b3cd-ed01869e6bba"/><h3 id="2a7536a1-10ea-80ff-bdf3-f5955925eed7" class=""><strong>5️⃣ Optional Chaining (</strong><code><strong>?.</strong></code><strong>)</strong></h3><p id="2a7536a1-10ea-8021-b531-c291b83fb0b5" class="">A safer alternative to <code>variable!</code>.</p><p id="2a7536a1-10ea-80a1-953c-f35ec81d4787" class="">It stops evaluation if a property in the chain is <code>null</code> or <code>undefined</code>.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8057-8c9b-f5572db0e260" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">console.log(this.user?.email);
+</code></pre><p id="2a7536a1-10ea-80cc-8c05-f103f85c8837" class="">✅ If <code>this.user</code> is <code>null</code> or <code>undefined</code>, it simply returns <code>undefined</code> instead of throwing an error.</p><p id="2a7536a1-10ea-805f-abf4-f84e28b53904" class="">Example in Angular template:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80e8-880a-d1f379b6d002" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;p&gt;{{ user?.name }}&lt;/p&gt;</code></pre><p id="2a7536a1-10ea-805f-8a41-d30ae25816de" class="">This will <strong>not crash</strong> the view even if <code>user</code> is <code>null</code>.</p><hr id="2a7536a1-10ea-80b1-8918-fa8ec088b41c"/><h3 id="2a7536a1-10ea-80da-9d7f-fb53c50385c0" class=""><strong>6️⃣ Nullish Coalescing Operator (</strong><code><strong>??</strong></code><strong>)</strong></h3><p id="2a7536a1-10ea-80d8-95a8-d9ff58796f58" class="">Provides a <strong>default value</strong> only when the left-hand side is <code>null</code> or <code>undefined</code>.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80c5-a36d-f32984f87bfd" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">const username = user.name ?? &#x27;Guest&#x27;;</code></pre><p id="2a7536a1-10ea-805c-a068-e6640bfdc32c" class="">✅ Example:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80a7-94f0-f412d624e1d1" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.userName = this.user?.name ?? &#x27;Unknown User&#x27;;</code></pre><hr id="2a7536a1-10ea-80a1-b1a5-f968203f8d32"/><h3 id="2a7536a1-10ea-804a-8179-d24be5d80fa7" class=""><strong>7️⃣ Combined Example in Angular</strong></h3><p id="2a7536a1-10ea-80ca-9189-f5eefc93fe17" class="">Let’s see all of these together 👇</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8038-8b7d-c47bacfcf2bd" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">export interface User {
+  id: number;
+  name?: string;
+  email?: string | null;
+}
+
+export class ProfileComponent implements OnInit {
+  user!: User; // Definite assignment assertion
+
+  ngOnInit() {
+    this.user = { id: 1, email: null };
+  }
+
+  get displayName(): string {
+    // Optional chaining + nullish coalescing
+    return this.user.name ?? &#x27;Guest&#x27;;
+  }
+
+  logEmail() {
+    // Non-null assertion
+    console.log(this.user!.email ?? &#x27;No email found&#x27;);
+  }
+}</code></pre><p id="2a7536a1-10ea-8055-849b-da55e509dc9b" class="">✅ Safe, flexible, and clean — exactly how industry-standard Angular code should look.</p><hr id="2a7536a1-10ea-809c-b7a2-f7eb6fcaabc2"/><h3 id="2a7536a1-10ea-803b-9e20-c4b5da968e51" class=""><strong>8️⃣ Summary Table</strong></h3><table id="2a7536a1-10ea-8018-9f6f-d7c7313acb4d" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-80f3-877b-e613f023d055"><th id="wVJk" class="simple-table-header-color simple-table-header">Symbol</th><th id="^zHK" class="simple-table-header-color simple-table-header">Meaning</th><th id="Hl^A" class="simple-table-header-color simple-table-header">Example</th><th id="p^oF" class="simple-table-header-color simple-table-header">Use Case</th></tr></thead><tbody><tr id="2a7536a1-10ea-809d-9a69-d9c6ca654d84"><td id="wVJk" class=""><code>!</code> (after declaration)</td><td id="^zHK" class="">Definite assignment assertion</td><td id="Hl^A" class=""><code>username!: string</code></td><td id="p^oF" class="">Assure compiler variable will be assigned</td></tr><tr id="2a7536a1-10ea-80a7-8c2d-ce76f6ae0ee6"><td id="wVJk" class=""><code>?</code> (in property/param)</td><td id="^zHK" class="">Optional property or argument</td><td id="Hl^A" class=""><code>email?: string</code></td><td id="p^oF" class="">May be undefined</td></tr><tr id="2a7536a1-10ea-8049-a9de-c37ef0d6eead"><td id="wVJk" class=""><code>variable!</code></td><td id="^zHK" class="">Non-null assertion</td><td id="Hl^A" class=""><code>user!.email</code></td><td id="p^oF" class="">Force access (use cautiously)</td></tr><tr id="2a7536a1-10ea-80ff-9eed-dacaaf52e88f"><td id="wVJk" class=""><code>?.</code></td><td id="^zHK" class="">Optional chaining</td><td id="Hl^A" class=""><code>user?.email</code></td><td id="p^oF" class="">Safe navigation</td></tr><tr id="2a7536a1-10ea-80da-9c63-c2f4abd7cb74"><td id="wVJk" class=""><code>??</code></td><td id="^zHK" class="">Nullish coalescing</td><td id="Hl^A" class=""><code>name ?? &#x27;Guest&#x27;</code></td><td id="p^oF" class="">Fallback default</td></tr></tbody></table><hr id="2a7536a1-10ea-8044-bf98-ee66362b898c"/><p id="2a7536a1-10ea-80d5-9c8b-fe434c40cd91" class="">✅ <strong>Key Takeaways:</strong></p><ul id="2a7536a1-10ea-8031-8643-cf08e22624d9" class="bulleted-list"><li style="list-style-type:disc">Angular enforces <strong>strict type checking</strong>; understanding these operators is essential.</li></ul><ul id="2a7536a1-10ea-80ac-84c1-d4c51cfa0c9e" class="bulleted-list"><li style="list-style-type:disc">Always <strong>prefer </strong><code><strong>?.</strong></code><strong> and </strong><code><strong>??</strong></code> over <code>!</code> for cleaner, safer code.</li></ul><ul id="2a7536a1-10ea-806e-b151-e7984bb19ec5" class="bulleted-list"><li style="list-style-type:disc">These null-safety features prevent most “undefined property” bugs in production</li></ul><hr id="2a7536a1-10ea-8005-8569-e6e952af0d36"/><h2 id="2a7536a1-10ea-80eb-a1d0-ec224614b7b2" class=""><strong>3. Decorators (Core of Angular)</strong></h2><p id="2a7536a1-10ea-80de-a886-f787f7fdf32a" class="">Angular uses <strong>decorators</strong> (TypeScript feature) to <strong>attach metadata</strong> to classes, methods, or properties.</p><p id="2a7536a1-10ea-80ea-9f1f-f79b88d6e144" class="">They are what make components, services, and modules <em>Angular-aware</em>.</p><hr id="2a7536a1-10ea-80c9-92d8-e0b6452c2aa2"/><h3 id="2a7536a1-10ea-80c2-ad26-fa2a77696d06" class=""><strong>3.1 What is a Decorator?</strong></h3><p id="2a7536a1-10ea-8093-8b6f-cbb2349ffb6f" class="">A <strong>decorator</strong> is a special TypeScript function prefixed with <code>@</code> that modifies or annotates a class.</p><hr id="2a7536a1-10ea-8050-ab70-e236af0d9837"/><h3 id="2a7536a1-10ea-80c6-9834-d83e9f64815e" class=""><strong>3.2 Common Angular Decorators</strong></h3><table id="2a7536a1-10ea-8012-acb7-e9d2097885c3" class="simple-table"><thead class="simple-table-header"><tr id="2a7536a1-10ea-80c2-bef9-f576f0408dde"><th id="=hKo" class="simple-table-header-color simple-table-header">Decorator</th><th id="v{a{" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="2a7536a1-10ea-8050-9fb0-db93906ca331"><td id="=hKo" class=""><code>@Component()</code></td><td id="v{a{" class="">Defines a UI component</td></tr><tr id="2a7536a1-10ea-8011-ac50-fdfbb3e9cd2f"><td id="=hKo" class=""><code>@Directive()</code></td><td id="v{a{" class="">Defines a custom directive</td></tr><tr id="2a7536a1-10ea-80ca-a18c-f7e3e2f69bf9"><td id="=hKo" class=""><code>@Pipe()</code></td><td id="v{a{" class="">Defines a reusable pipe</td></tr><tr id="2a7536a1-10ea-800a-a227-c1c9f8d1d604"><td id="=hKo" class=""><code>@Injectable()</code></td><td id="v{a{" class="">Marks a class as available for DI</td></tr><tr id="2a7536a1-10ea-8048-a845-f4d5355ea0e5"><td id="=hKo" class=""><code>@NgModule()</code></td><td id="v{a{" class="">Defines a module</td></tr><tr id="2a7536a1-10ea-807e-af8a-e39ab8a0384b"><td id="=hKo" class=""><code>@Input()</code> / <code>@Output()</code></td><td id="v{a{" class="">Used for component communication</td></tr></tbody></table><hr id="2a7536a1-10ea-801d-8fca-efb57e3a27c5"/><h3 id="2a7536a1-10ea-8002-ac82-c022c055c81e" class=""><strong>Example: Component Decorator</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80bb-aee4-f710559e58c4" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@Component({
+  selector: &#x27;app-user&#x27;,
+  template: `&lt;h2&gt;{{ name }}&lt;/h2&gt;`,
+  styles: [`h2 { color: blue; }`]
+})
+export class UserComponent {
+  name = &#x27;Adithya&#x27;;
+}</code></pre><p id="2a7536a1-10ea-8087-a92f-cb4232482d40" class="">Here, the <code>@Component</code> decorator tells Angular:</p><ul id="2a7536a1-10ea-80e4-85c7-f6fc58e2933e" class="bulleted-list"><li style="list-style-type:disc">How to instantiate the class</li></ul><ul id="2a7536a1-10ea-80be-a9e6-eaf37a8d8b71" class="bulleted-list"><li style="list-style-type:disc">Where to render the component (selector)</li></ul><ul id="2a7536a1-10ea-80fe-9df4-cbfd138e6394" class="bulleted-list"><li style="list-style-type:disc">Which template and styles to use</li></ul><hr id="2a7536a1-10ea-80ca-8288-e3067df595a3"/><h3 id="2a7536a1-10ea-805d-8486-c298c76ee5d6" class=""><strong>Example: Injectable Decorator</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-80bb-8a63-dd406bc329c6" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@Injectable({
+  providedIn: &#x27;root&#x27;
+})
+export class UserService {
+  getUser() {
+    return &#x27;Adithya&#x27;;
+  }
+}</code></pre><blockquote id="2a7536a1-10ea-80cf-ac6d-cd6946b06b9d" class="">✅ Makes the service available for Dependency Injection throughout the app.</blockquote><hr id="2a7536a1-10ea-8028-9730-f64fd8bc1c68"/><h3 id="2a7536a1-10ea-8007-956a-f6749eefac98" class=""><strong>Example: Input and Output Decorators</strong></h3><p id="2a7536a1-10ea-8064-a758-f92612bdec52" class="">Used for <strong>parent-child component communication</strong>.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8083-8ece-f6dd415ccc1a" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">// child.component.ts
+@Input() username!: string;
+@Output() greet = new EventEmitter&lt;string&gt;();
+
+sendGreeting() {
+  this.greet.emit(`Hello ${this.username}`);
+}</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-803d-9e13-ffde3d24b399" class="code code-wrap"><code class="language-HTML" style="white-space:pre-wrap;word-break:break-all">&lt;!-- parent.component.html --&gt;
+&lt;app-child [username]=&quot;name&quot; (greet)=&quot;onGreet($event)&quot;&gt;&lt;/app-child&gt;</code></pre><hr id="2a7536a1-10ea-802b-8d1c-dd6fde66c5db"/><h2 id="2a7536a1-10ea-802d-a6f3-f67670da0008" class=""><strong>4. Async Programming in TypeScript</strong></h2><p id="2a7536a1-10ea-80c9-bead-ffcf29a3f5ce" class="">Angular apps are event-driven — async code is essential for handling API calls, timers, and user actions.</p><hr id="2a7536a1-10ea-809e-a045-d6aae4bacf9f"/><h3 id="2a7536a1-10ea-801a-a453-d36f64700bf0" class=""><strong>4.1 Observables (RxJS)</strong></h3><p id="2a7536a1-10ea-80f1-8858-e2cb22909733" class="">Used for <strong>streams of data</strong> — can emit multiple values over time.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8098-af98-f70432abac81" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">getData(): Observable&lt;number&gt; {
+  return interval(1000); // emits values every 1 second
+}</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-806d-9440-e28b42b93ebc" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.getData().subscribe(value =&gt; console.log(value));</code></pre><p id="2a7536a1-10ea-8024-a0e1-e47cd775feb8" class="">✅ Angular prefers <strong>Observables</strong> (not Promises) because they support:</p><ul id="2a7536a1-10ea-805f-a51f-caa6e3be84b3" class="bulleted-list"><li style="list-style-type:disc">Continuous data streams</li></ul><ul id="2a7536a1-10ea-804d-80ad-cd1ff8a73ee9" class="bulleted-list"><li style="list-style-type:disc">Cancellation</li></ul><ul id="2a7536a1-10ea-801a-bd0e-ee9baee72921" class="bulleted-list"><li style="list-style-type:disc">Operators for transformation and error handling</li></ul><hr id="2a7536a1-10ea-80e2-a774-c739854e1ebf"/><h2 id="2a7536a1-10ea-801c-882e-de7fb94f528b" class=""><strong>5. Putting It All Together</strong></h2><p id="2a7536a1-10ea-805b-a47e-fc57b2ac0b4a" class="">Let’s see how TypeScript concepts fit in an Angular service:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-8036-8c01-e1fc84de8a02" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@Injectable({ providedIn: &#x27;root&#x27; })
+export class UserService {
+  private users: User[] = [
+    { id: 1, name: &#x27;Adithya&#x27;, email: &#x27;adithya@example.com&#x27; }
+  ];
+
+  getUsers(): Observable&lt;User[]&gt; {
+    return of(this.users); // RxJS Observable
+  }
+}
+</code></pre><p id="2a7536a1-10ea-8028-880c-d0ede49eafd8" class="">And how a component consumes it:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a7536a1-10ea-803f-a9e8-e4f44f3aa4db" class="code code-wrap"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">@Component({
+  selector: &#x27;app-user-list&#x27;,
+  template: `&lt;li *ngFor=&quot;let user of users&quot;&gt;{{ user.name }}&lt;/li&gt;`
+})
+export class UserListComponent implements OnInit {
+  users: User[] = [];
+
+  constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    this.userService.getUsers().subscribe(data =&gt; this.users = data);
+  }
+}</code></pre><hr id="2a7536a1-10ea-8078-bff1-cc60aa575b00"/><p id="2a7536a1-10ea-8091-8f7d-e210db367fd3" class="">✅ <strong>In summary:</strong></p><ul id="2a7536a1-10ea-80b0-982e-fbf8cb44c36f" class="bulleted-list"><li style="list-style-type:disc">TypeScript brings <strong>types, OOP, and decorators</strong> to Angular.</li></ul><ul id="2a7536a1-10ea-804e-994d-e2fe5ecf5b8f" class="bulleted-list"><li style="list-style-type:disc">Core Angular concepts (components, services, DI) rely on these features.</li></ul><ul id="2a7536a1-10ea-8031-9d64-f685c3be3c82" class="bulleted-list"><li style="list-style-type:disc">Mastering TypeScript makes debugging, refactoring, and scaling easier.</li></ul><hr id="2a7536a1-10ea-80a5-ad9e-de9a73d5a7f1"/></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
